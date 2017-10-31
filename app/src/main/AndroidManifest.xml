@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pit.opengles">
-    
+    package="pit.opengles"
+    android:versionCode="4"
+    android:versionName="V_1.3"
+    >
     <uses-sdk       android:minSdkVersion="21"
-                    android:targetSdkVersion="25" />
-                    
-    <uses-feature   android:glEsVersion="0x30000"
-                    android:required="true" />
-                    
+        android:targetSdkVersion="25" />
+    <uses-feature   android:glEsVersion="0x20000"
+        android:required="true" />
     <uses-feature android:name="android.software.live_wallpaper" />
 
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/tileslivewallpaper"
+        android:icon="@mipmap/tlw_new"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/tileslivewallpaper"
+        android:roundIcon="@mipmap/tlw_new"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity android:name=".WallpaperMainActivity"
-            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ImpressumActivity">
         </activity>
         <service android:name="pit.livewallpaper.ColloredWallpaperService"
             android:label="@string/short_name"
@@ -38,6 +39,8 @@
                 android:name="android.service.wallpaper"
                 android:resource="@xml/wallpaper"/>
         </service>
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
     </application>
 
 </manifest>

@@ -39,7 +39,7 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
 
             if(isValidGLES())
             {
-                setEGLContextClientVersion(3);
+                setEGLContextClientVersion(2);
                 setPreserveEGLContextOnPause(true);
                 _mRenderer = getGLESRenderer();
                 setRenderer(_mRenderer);
@@ -51,8 +51,9 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
         private boolean isValidGLES()
         {
             ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            assert am != null;
             ConfigurationInfo info = am.getDeviceConfigurationInfo();
-            return info.reqGlEsVersion >= 0x3000;
+            return info.reqGlEsVersion >= 0x2000;
         }
 
         @Override
@@ -62,14 +63,7 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
             {
                 if(prefs != getSharedPreferences("Info", Context.MODE_PRIVATE)) return;
                 String color = prefs.getString("color", "");
-                if(color.matches("red"))
-                    ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(new Vector3f(0.5f, -0.5f, -0.5f));
-                else if(color.matches("blue"))
-                    ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(new Vector3f(-0.5f, -0.5f, 0.5f));
-                else if(color.matches("green"))
-                    ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(new Vector3f(-0.5f, 0.5f, -0.5f));
-                else
-                    ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(new Vector3f(0, 0, 0));
+                ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(color);
                 Float animSpeed = prefs.getFloat("animSpeed", 0.1f);
                 ((GLESPlaneAnimatedRenderer) _mRenderer).changeAnimationSpeed(animSpeed);
                 String motion = prefs.getString("motion", "straight");

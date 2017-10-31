@@ -1,19 +1,17 @@
-#version 300 es
-
 precision mediump float;
 
-uniform vec3 colorCorrection;
+uniform vec3 lightPosition;
+uniform sampler2D mask;
+uniform sampler2D texture;
 
-in vec3 FragPos;
-in vec3 Color;
-in float light;
+varying vec3 FragPos;
+varying vec2 TexCoords;
 
-layout(location=0) out vec4 fragColor;
 
 void main()
 {
-    if(light < 0.02) discard;
-    float bloom = light;
-    if(light > 0.98) bloom *= (light*1.1);
-	fragColor = vec4(Color + colorCorrection, 1.0) * bloom;
+	float dist = length(FragPos - lightPosition);
+	float light = 0.02 / ((dist * (dist)));
+	if(light > 0.99) light * 2.0;
+	gl_FragColor = mix((texture2D(texture, TexCoords)), vec4(0.0), (texture2D(mask, TexCoords)).a) * light;
 }

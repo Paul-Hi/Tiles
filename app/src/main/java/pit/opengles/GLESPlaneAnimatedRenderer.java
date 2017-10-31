@@ -1,14 +1,13 @@
 package pit.opengles;
 
 import android.content.Context;
-import android.opengl.GLES30;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -22,19 +21,24 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Context _mContext;
     private Shader _mShader;
     private FloatBuffer _mVertexBuffer;
-    private FloatBuffer _mModelBuffer;
-    private FloatBuffer _mColorBuffer;
-    private Vector3f _mColorCorrection = new Vector3f(0, 0, 0);
+    private FloatBuffer _mTexCoordBuffer;
     private float _mAnimationSpeed = 1.0f;
     private Camera _mCamera;
     private Vector3f _mLightPosition;
+    private Vector3f _mPlanePosition;
     private Transform _mLightTransform;
+    private Transform _mPlaneTransform;
     private final int sizeOfFloat = 4;
+    private int _mColorful = 0;
+    private int _mRed = 0;
+    private int _mGreen = 0;
+    private int _mBlue = 0;
+    private int _mTexture = 0;
+    private int _mMask = 0;
+    private boolean red = false, blue = false, green = false;
     private boolean straight = true, wave = false;
 
     private Plane plane;
-    private int c = 0;
-    private Random rand;
 
     public GLESPlaneAnimatedRenderer(Context context)
     {
@@ -45,89 +49,56 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 notUsed, EGLConfig config)
     {
         _mShader = new Shader(_mContext);
-        _mLightPosition = new Vector3f(0, 0, 1);
-        _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
+        _mLightPosition = new Vector3f(0, 0, -1);
+        _mPlanePosition = new Vector3f(0, 0, 0);
+        _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.01f,0.01f ,0.01f ,0);
+        _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
         _mCamera = new Camera();
-        rand = new Random(9);
         plane = new Plane();
 
-        GLES30.glEnable(GLES30.GL_DEPTH_TEST);
-        GLES30.glEnable(GLES30.GL_CULL_FACE);
-        GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         createVisuals();
     }
 
     public void createVisuals()
     {
-        c = 0;
         //vertices
         float[] vertices = plane.vertices;
         _mVertexBuffer = floatToBuffer(vertices);
-        //modelMatrix
-        float scale = 0.13f;
-        float spacing = 0.34f;
-        Transform[] transforms = new Transform[70 * 62];
-        for(float x = 35; x > -35; x--)
-        {
-            for(float y = 31; y > -31; y--)
-            {
-                transforms[c++] = new Transform(x * spacing, y * spacing, 1, 1, 1, 1, 1 * scale, 1 * scale, 1 * scale, 0);
-            }
-        }
-        float[] mMs = new float[0];
-        for(int i = 0; i < c; i++)
-        {
-            mMs = concat(mMs, transforms[i].getModelMatrix());
-        }
-        _mModelBuffer = floatToBuffer(mMs);
-
-        float[] colors = new float[c * 3];
-
-
-        for(int i = 0; i < colors.length; i++)
-        {
-            colors[i] = rand.nextFloat();
-
-        }
-        _mColorBuffer = floatToBuffer(colors);
+        //texCoords
+        float[] texCoords = plane.texCoords;
+        _mTexCoordBuffer = floatToBuffer(texCoords);
 
         _mVertexBuffer.position(0);
-        GLES30.glEnableVertexAttribArray(0);
-        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 0, _mVertexBuffer);
+        GLES20.glEnableVertexAttribArray(0);
+        GLES20.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 0, _mVertexBuffer);
 
-        int position = 0;
-        _mModelBuffer.position(position);
-        GLES30.glEnableVertexAttribArray(1);
-        GLES30.glVertexAttribPointer(1, 4, GLES30.GL_FLOAT, false, sizeOfFloat * 16, _mModelBuffer);
-        position += 4;
-        _mModelBuffer.position(position);
-        GLES30.glEnableVertexAttribArray(2);
-        GLES30.glVertexAttribPointer(2, 4, GLES30.GL_FLOAT, false, sizeOfFloat * 16, _mModelBuffer);
-        position += 4;
-        _mModelBuffer.position(position);
-        GLES30.glEnableVertexAttribArray(3);
-        GLES30.glVertexAttribPointer(3, 4, GLES30.GL_FLOAT, false, sizeOfFloat * 16, _mModelBuffer);
-        position += 4;
-        _mModelBuffer.position(position);
-        GLES30.glEnableVertexAttribArray(4);
-        GLES30.glVertexAttribPointer(4, 4, GLES30.GL_FLOAT, false, sizeOfFloat * 16, _mModelBuffer);
+        _mTexCoordBuffer.position(0);
+        GLES20.glEnableVertexAttribArray(1);
+        GLES20.glVertexAttribPointer(1, 2, GLES20.GL_FLOAT, false, 0, _mTexCoordBuffer);
 
-        _mColorBuffer.position(0);
-        GLES30.glEnableVertexAttribArray(5);
-        GLES30.glVertexAttribPointer(5, 3, GLES30.GL_FLOAT, false, 0, _mColorBuffer);
-
-        GLES30.glVertexAttribDivisor(1, 1);
-        GLES30.glVertexAttribDivisor(2, 1);
-        GLES30.glVertexAttribDivisor(3, 1);
-        GLES30.glVertexAttribDivisor(4, 1);
-        GLES30.glVertexAttribDivisor(5, 1);
+        _mMask = ResourceLoader.loadTexture(_mContext, R.drawable.mask);
+        _mRed = ResourceLoader.loadTexture(_mContext, R.drawable.red);
+        _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.blue);
+        _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.green);
+        _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.colorful);
+        if(red)
+            _mTexture = _mRed;
+        else if(green)
+            _mTexture = _mGreen;
+        else if(blue)
+            _mTexture = _mBlue;
+        else
+            _mTexture = _mColorful;
     }
 
     @Override
     public void onSurfaceChanged(GL10 notUsed, int width, int height)
     {
-        GLES30.glViewport(0, 0, width, height);
+        GLES20.glViewport(0, 0, width, height);
         _mCamera.onSurfaceChanged(width, height);
     }
 
@@ -138,7 +109,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     {
         time = SystemClock.uptimeMillis();
         float currentTime = time/1000.0f;
-        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
         if(straight) moveStraight(currentTime);
         else if(wave) moveWave(currentTime);
@@ -148,30 +119,41 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
 
     private void moveStraight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 4;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x = 0.0f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
     private void moveWave(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 4;
-        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2);
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
     private void DrawModelInstanced()
     {
-        GLES30.glUseProgram(_mShader.getMainProgram());
+        GLES20.glUseProgram(_mShader.getMainProgram());
 
         float[] MVPMatrix = new float[16];
 
         android.opengl.Matrix.multiplyMM(MVPMatrix, 0, _mCamera.getProjectionMatrix(), 0, _mCamera.getViewMatrix(), 0);
 
-        GLES30.glUniformMatrix4fv(GLES30.glGetUniformLocation(_mShader.getMainProgram(), "MVMatrix"), 1, false, MVPMatrix, 0);
+        GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "MVMatrix"), 1, false, MVPMatrix, 0);
 
-        GLES30.glUniform3fv(GLES30.glGetUniformLocation(_mShader.getMainProgram(), "lightPosition"), 1,_mLightPosition.get(), 0);
-        GLES30.glUniform3fv(GLES30.glGetUniformLocation(_mShader.getMainProgram(), "colorCorrection"), 1,_mColorCorrection.get(), 0);
+        GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "modelMatrix"), 1, false, _mPlaneTransform.getModelMatrix(), 0);
 
-        GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLES, 0, 6, 70 * 62);
+        GLES20.glUniform3fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "lightPosition"), 1,_mLightPosition.get(), 0);
+
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _mMask);
+        GLES20.glUniform1i(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "mask"), 0);
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _mTexture);
+        GLES20.glUniform1i(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "texture"), 1);
+
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }
 
     private FloatBuffer floatToBuffer(float[] array)
@@ -198,9 +180,30 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         return result;
     }
 
-    public void switchColors(Vector3f newColorCorrection)
+    public void switchColors(String newColor)
     {
-        _mColorCorrection = newColorCorrection;
+        switch (newColor)
+        {
+            case "red":
+                _mTexture = _mRed;
+                red = true;
+                blue = green = false;
+                break;
+            case "blue":
+                _mTexture = _mBlue;
+                blue = true;
+                red = green = false;
+                break;
+            case "green":
+                _mTexture = _mGreen;
+                green = true;
+                red = blue = false;
+                break;
+            case "colorful":
+                _mTexture = _mColorful;
+                red = green = blue = false;
+                break;
+        }
     }
 
     public void changeAnimationSpeed(float newSpeed)

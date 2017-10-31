@@ -1,21 +1,15 @@
-#version 300 es
-
-layout(location=0) in vec3 position;
-layout(location=1) in mat4 modelMatrix;
-layout(location=5) in vec3 color;
+attribute vec3 position;
+attribute vec2 texCoords;
 
 uniform highp mat4 MVMatrix;
-uniform highp vec3 lightPosition;
+uniform highp mat4 modelMatrix;
 
-out vec3 FragPos;
-out vec3 Color;
-out float light;
+varying vec3 FragPos;
+varying vec2 TexCoords;
 
 void main()
 {
-	FragPos = vec3(modelMatrix * vec4(position, 1.0));
-	float dist = length(FragPos - lightPosition);
-	light = 1.0 / (dist * (dist/2.0));
-    Color = color;
+	FragPos = position;
+	TexCoords = texCoords;
 	gl_Position = MVMatrix * modelMatrix * vec4(position, 1.0);
 }

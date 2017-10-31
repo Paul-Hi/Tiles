@@ -27,9 +27,10 @@ public class Camera {
         final float ratio = (float) width / height;
         final float near = 0.1f;
         final float far = 100.0f;
-        final float foV = 70.0f;
+        //final float foV = 70.0f;
 
-        Matrix.perspectiveM(_mProjectionMatrix, 0, foV, ratio, near, far);
+        //Matrix.perspectiveM(_mProjectionMatrix, 0, foV, ratio, near, far);
+        Matrix.orthoM(_mProjectionMatrix, 0, -ratio, ratio, -1, 1, near, far);
     }
 
     public float[] getViewMatrix() { return _mViewMatrix;}

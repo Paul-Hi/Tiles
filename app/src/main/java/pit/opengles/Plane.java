@@ -15,4 +15,14 @@ public class Plane {
                     -1.0f, -1.0f, -1.0f,
                     -1.0f, 1.0f, -1.0f
             };
+
+    public float[] texCoords =
+            {
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    1.0f, 0.0f
+            };
 }
