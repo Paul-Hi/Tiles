@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="pit.opengles">
+    
+    <uses-sdk       android:minSdkVersion="21"
+                    android:targetSdkVersion="25" />
+                    
+    <uses-feature   android:glEsVersion="0x30000"
+                    android:required="true" />
+                    
+    <uses-feature android:name="android.software.live_wallpaper" />
+
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/tileslivewallpaper"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/tileslivewallpaper"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity android:name=".WallpaperMainActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service android:name="pit.livewallpaper.ColloredWallpaperService"
+            android:label="@string/short_name"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/wallpaper"/>
+        </service>
+    </application>
+
+</manifest>
