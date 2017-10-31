@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pit.opengles"
-    android:versionCode="4"
-    android:versionName="V_1.3"
-    >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="pit.opengles">
     <uses-sdk       android:minSdkVersion="21"
         android:targetSdkVersion="25" />
     <uses-feature   android:glEsVersion="0x20000"
