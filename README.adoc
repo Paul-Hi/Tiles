@@ -19,16 +19,16 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 
 
 == Features
-[x] colored radio buttons for selection
-[x] imprint and copyright :-)
-[x] two different paths the light follows (straight and wave)
-[x] light speed configurable
-[x] settings stored when reconfiguring the live wallpaper
-[x] admob support to help me get some support for my next test phone (Pixel X?) ;-)
+- [x] colored radio buttons for selection
+- [x] imprint and copyright :-)
+- [x] two different paths the light follows (straight and wave)
+- [x] light speed configurable
+- [x] settings stored when reconfiguring the live wallpaper
+- [x] admob support to help me get some support for my next test phone (Pixel X?) ;-)
 
 
 == Roadmap (unsorted)
-[] configuration to hide icon in app drawer
-[] new real physical effect moves
-[] load phone images to be used as background
-[] ....
+* [ ] configuration to hide icon in app drawer
+* [ ] new real physical effect moves
+* [ ] load phone images to be used as background
+* [ ] ....
