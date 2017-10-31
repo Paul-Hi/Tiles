@@ -203,7 +203,7 @@
         android:layout_weight="1"
         android:layout_alignParentBottom="true"
         app:adSize="SMART_BANNER"
-        app:adUnitId="AdID"
+        app:adUnitId="@string/ad_mob_banner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

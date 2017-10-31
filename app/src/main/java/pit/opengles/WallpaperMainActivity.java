@@ -44,11 +44,13 @@ public class WallpaperMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallpaper_activity_main);
 
-        MobileAds.initialize(this, "AppID");
+        MobileAds.initialize(this, getString(R.string.ad_mob_id));
 
         _mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("F8757B0F4DDA3CEB3AFA68C63062296A") /* Pits Handy OnePlus3 - CHECK */
+                .addTestDevice("397A8E3873AFA1DDC3F3897C51B44C8B") /* Pits Tablet Huawei* - CHECK */
                 .build();
         _mAdView.loadAd(adRequest);
 
