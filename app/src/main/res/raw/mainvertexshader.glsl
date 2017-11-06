@@ -9,7 +9,7 @@ varying vec2 TexCoords;
 
 void main()
 {
-	FragPos = position;
+	FragPos =  vec3(modelMatrix * vec4(position, 1.0));
 	TexCoords = texCoords;
 	gl_Position = MVMatrix * modelMatrix * vec4(position, 1.0);
 }

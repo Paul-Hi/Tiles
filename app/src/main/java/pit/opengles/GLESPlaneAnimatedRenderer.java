@@ -1,6 +1,11 @@
 package pit.opengles;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
@@ -24,10 +29,10 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private FloatBuffer _mTexCoordBuffer;
     private float _mAnimationSpeed = 0.2f;
     private Camera _mCamera;
-    private Vector3f _mLightPosition;
-    private Vector3f _mPlanePosition;
-    private Transform _mLightTransform;
-    private Transform _mPlaneTransform;
+    private Vector3f _mLightPosition = new Vector3f(0, 0, -1);;
+    private Vector3f _mPlanePosition = new Vector3f(0, 0, 0);
+    private Transform _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
+    private Transform _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
     private final int sizeOfFloat = 4;
     private int _mPumkin = 0;
     private int _mColorful = 0;
@@ -38,6 +43,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mMask = 0;
     private boolean red = false, blue = false, green = false, colorful  = true, pumkin = false;
     private boolean straight = true, wave = false;
+
 
     private Plane plane;
 
@@ -50,12 +56,9 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 notUsed, EGLConfig config)
     {
         _mShader = new Shader(_mContext);
-        _mLightPosition = new Vector3f(0, 0, -1);
-        _mPlanePosition = new Vector3f(0, 0, 0);
-        _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
-        _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
         _mCamera = new Camera();
         plane = new Plane();
+
 
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -161,28 +164,25 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }
 
+    public void parallaxMove(float x, float y)
+    {
+        if (_mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            float temp = -y;
+            y = x;
+            x = temp;
+        }
+        _mPlanePosition.x += (x * (0.002f));
+        _mPlanePosition.y -= (y * (0.002f));
+        _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
+    }
+
     private FloatBuffer floatToBuffer(float[] array)
     {
         FloatBuffer fb = ByteBuffer.allocateDirect(array.length * sizeOfFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         fb.put(array).position(0);
 
         return fb;
-    }
-
-    static float[] concat(float[]... floatArrays) {
-        int length = 0;
-        for (float[] array : floatArrays) {
-            length += array.length;
-        }
-        float[] result = new float[length];
-        int position = 0;
-        for (float[] array : floatArrays) {
-            for (float element : array) {
-                result[position] = element;
-                position++;
-            }
-        }
-        return result;
     }
 
     public void switchColors(String newColor)

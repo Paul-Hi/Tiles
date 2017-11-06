@@ -2,6 +2,10 @@ package pit.livewallpaper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 
 import pit.opengles.GLESPlaneAnimatedRenderer;
@@ -11,8 +15,7 @@ import pit.opengles.Vector3f;
  * Created by paulh on 16.10.2017.
  */
 
-public class ColloredWallpaperService extends OpenGLESWallpaperService
-{
+public class ColloredWallpaperService extends OpenGLESWallpaperService {
 
     private GLESPlaneAnimatedRenderer _mRenderer;
 

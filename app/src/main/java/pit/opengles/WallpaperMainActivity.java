@@ -43,8 +43,8 @@ public class WallpaperMainActivity extends Activity {
     public SharedPreferences prefs;
     public SharedPreferences.Editor editor;
     private boolean changed;
-    PackageManager p;
-    ComponentName cN;
+    private PackageManager p;
+    private ComponentName cN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,10 @@ public class WallpaperMainActivity extends Activity {
 
         _mGLSurfaceView = (GLESPlaneAnimatedSurfaceView) findViewById(R.id.surfaceView);
         _mRenderer = new GLESPlaneAnimatedRenderer(this);
+
         if(isValidGLES())
         {
-            _mGLSurfaceView. setEGLContextClientVersion(2);
+            _mGLSurfaceView.setEGLContextClientVersion(2);
             _mGLSurfaceView.setRenderer(_mRenderer);
         }
         else

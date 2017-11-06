@@ -28,6 +28,7 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
         SharedPreferences _mPrefs;
         GLSurfaceView.Renderer _mRenderer;
 
+
         @Override
         public void onCreate(SurfaceHolder sH)
         {
