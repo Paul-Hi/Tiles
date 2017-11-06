@@ -22,20 +22,21 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Shader _mShader;
     private FloatBuffer _mVertexBuffer;
     private FloatBuffer _mTexCoordBuffer;
-    private float _mAnimationSpeed = 1.0f;
+    private float _mAnimationSpeed = 0.2f;
     private Camera _mCamera;
     private Vector3f _mLightPosition;
     private Vector3f _mPlanePosition;
     private Transform _mLightTransform;
     private Transform _mPlaneTransform;
     private final int sizeOfFloat = 4;
+    private int _mPumkin = 0;
     private int _mColorful = 0;
     private int _mRed = 0;
     private int _mGreen = 0;
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
-    private boolean red = false, blue = false, green = false;
+    private boolean red = false, blue = false, green = false, colorful  = true, pumkin = false;
     private boolean straight = true, wave = false;
 
     private Plane plane;
@@ -51,7 +52,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mShader = new Shader(_mContext);
         _mLightPosition = new Vector3f(0, 0, -1);
         _mPlanePosition = new Vector3f(0, 0, 0);
-        _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.01f,0.01f ,0.01f ,0);
+        _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
         _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
         _mCamera = new Camera();
         plane = new Plane();
@@ -80,19 +81,23 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glEnableVertexAttribArray(1);
         GLES20.glVertexAttribPointer(1, 2, GLES20.GL_FLOAT, false, 0, _mTexCoordBuffer);
 
-        _mMask = ResourceLoader.loadTexture(_mContext, R.drawable.mask);
-        _mRed = ResourceLoader.loadTexture(_mContext, R.drawable.red);
-        _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.blue);
-        _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.green);
-        _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.colorful);
+        _mMask = ResourceLoader.loadTexture(_mContext, R.drawable.newmask);
+        _mRed = ResourceLoader.loadTexture(_mContext, R.drawable.newred);
+        _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.newblue);
+        _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.newgreen);
+        _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.newcolorful);
+        _mPumkin = ResourceLoader.loadTexture(_mContext, R.drawable.pumkin);
+
         if(red)
             _mTexture = _mRed;
         else if(green)
             _mTexture = _mGreen;
         else if(blue)
             _mTexture = _mBlue;
-        else
+        else if(colorful)
             _mTexture = _mColorful;
+        else if(pumkin)
+            _mTexture =  _mPumkin;
     }
 
     @Override
@@ -114,7 +119,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         if(straight) moveStraight(currentTime);
         else if(wave) moveWave(currentTime);
 
-        DrawModelInstanced();
+        DrawModel();
     }
 
     private void moveStraight(float t)
@@ -130,7 +135,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
-    private void DrawModelInstanced()
+    private void DrawModel()
     {
         GLES20.glUseProgram(_mShader.getMainProgram());
 
@@ -187,21 +192,27 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             case "red":
                 _mTexture = _mRed;
                 red = true;
-                blue = green = false;
+                blue = green = colorful = pumkin = false;
                 break;
             case "blue":
                 _mTexture = _mBlue;
                 blue = true;
-                red = green = false;
+                red = green = colorful = pumkin = false;
                 break;
             case "green":
                 _mTexture = _mGreen;
                 green = true;
-                red = blue = false;
+                red = blue= colorful = pumkin = false;
                 break;
             case "colorful":
                 _mTexture = _mColorful;
-                red = green = blue = false;
+                colorful = true;
+                red = green = blue = pumkin = false;
+                break;
+            case "pumkin":
+                _mTexture = _mPumkin;
+                pumkin = true;
+                red = green = blue = colorful = false;
                 break;
         }
     }

@@ -62,9 +62,9 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
             if(isValidGLES())
             {
                 if(prefs != getSharedPreferences("Info", Context.MODE_PRIVATE)) return;
-                String color = prefs.getString("color", "");
+                String color = prefs.getString("color", "colorful");
                 ((GLESPlaneAnimatedRenderer) _mRenderer).switchColors(color);
-                Float animSpeed = prefs.getFloat("animSpeed", 0.1f);
+                Float animSpeed = prefs.getFloat("animSpeed", 0.2f);
                 ((GLESPlaneAnimatedRenderer) _mRenderer).changeAnimationSpeed(animSpeed);
                 String motion = prefs.getString("motion", "straight");
                 ((GLESPlaneAnimatedRenderer) _mRenderer).changeMotion(motion);

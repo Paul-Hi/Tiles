@@ -10,15 +10,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Switch;
+
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -38,11 +42,17 @@ public class WallpaperMainActivity extends Activity {
     private AdView _mAdView;
     public SharedPreferences prefs;
     public SharedPreferences.Editor editor;
+    private boolean changed;
+    PackageManager p;
+    ComponentName cN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallpaper_activity_main);
+        changed = false;
+        p = getPackageManager();
+        cN = new ComponentName(this, WallpaperMainActivity.class);
 
         MobileAds.initialize(this, getString(R.string.ad_mob_id));
 
@@ -71,8 +81,8 @@ public class WallpaperMainActivity extends Activity {
 
         editor.putString("color", prefs.getString("color", "colorful"));
         _mRenderer.switchColors(prefs.getString("color", "colorful"));
-        editor.putFloat("animSpeed", prefs.getFloat("animSpeed", 1.0f));
-        _mRenderer.changeAnimationSpeed(prefs.getFloat("animSpeed", 1.0f));
+        editor.putFloat("animSpeed", prefs.getFloat("animSpeed", 0.2f));
+        _mRenderer.changeAnimationSpeed(prefs.getFloat("animSpeed", 0.2f));
         editor.putString("motion", prefs.getString("motion", "straight"));
         _mRenderer.changeMotion(prefs.getString("motion", "straight"));
 
@@ -81,6 +91,7 @@ public class WallpaperMainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 editor.apply();
+                changed = false;
                 try {
                     Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
                     intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(WallpaperMainActivity.this, ColloredWallpaperService.class));
@@ -115,12 +126,15 @@ public class WallpaperMainActivity extends Activity {
                 radioButton = (RadioButton) findViewById(R.id.colorful);
                 radioButton.toggle();
                 break;
+            case "pumkin":
+                radioButton = (RadioButton) findViewById(R.id.pumkin);
+                radioButton.toggle();
+                break;
         }
         col.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                changed = true;
                 View radioButton = findViewById(checkedId);
                 int index = group.indexOfChild(radioButton);
                 switch (index) {
@@ -140,6 +154,10 @@ public class WallpaperMainActivity extends Activity {
                         _mRenderer.switchColors("colorful");
                         editor.putString("color", "colorful");
                         break;
+                    case 4:
+                        _mRenderer.switchColors("pumkin");
+                        editor.putString("color", "pumkin");
+                        break;
                 }
             }
         });
@@ -156,11 +174,10 @@ public class WallpaperMainActivity extends Activity {
                 radioButton.toggle();
                 break;
         }
-        motion.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
+        motion.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                changed = true;
                 View radioButton = findViewById(checkedId);
                 int index = group.indexOfChild(radioButton);
                 switch (index) {
@@ -177,12 +194,13 @@ public class WallpaperMainActivity extends Activity {
         });
 
         SeekBar animSpeed = (SeekBar) findViewById(R.id.animationSpeedSlider);
-        Float currentSpeed = prefs.getFloat("animSpeed", 1.0f);
-        animSpeed.setProgress((int)(currentSpeed * 10));
+        Float currentSpeed = prefs.getFloat("animSpeed", 0.2f);
+        animSpeed.setProgress((int)(currentSpeed * 50));
         animSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float animSpeed = progress/10.0f;
+                changed = true;
+                float animSpeed = progress/50.0f;
                 _mRenderer.changeAnimationSpeed(animSpeed);
                 editor.putFloat("animSpeed", animSpeed);
             }
@@ -242,6 +260,11 @@ public class WallpaperMainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        if(!changed)
+        {
+            WallpaperMainActivity.super.onBackPressed();
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setTitle("Set Wallpaper?")
                 .setMessage("Do you want to set the current Configuration?")
