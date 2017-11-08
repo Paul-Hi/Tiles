@@ -116,6 +116,7 @@ public class WallpaperMainActivity extends Activity {
         parallaxToggle.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                changed = true;
                 if(isChecked)
                 {
                     _mGLSurfaceView.activateSensors(true);

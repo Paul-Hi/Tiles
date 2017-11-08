@@ -44,6 +44,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
+    private float _dX = 0, _dY = 0;
     private boolean red = false, blue = false, green = false, colorful  = true, pumkin = false;
     private boolean straight = true, wave = false;
 
@@ -130,15 +131,15 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
 
     private void moveStraight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
-        _mLightPosition.x = 0.0f;
+        _mLightPosition.y = /*_dY + */(float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x = /*_dX + */0.0f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
     private void moveWave(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
-        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
+        _mLightPosition.y = /*_dY + */(float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x  = /*_dX + */(float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
     private void DrawModel()
@@ -184,8 +185,20 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             }
             x = temp;
         }
+        _dX += (x * (0.001f));
+        _dY -= (y * (0.001f));
+        if(_dX >= 0.5f) _dX = 0.5f;
+        if(_dX <= -0.5f) _dX = -0.5f;
+        if(_dY >= 1) _dY = 1;
+        if(_dY <= -1) _dY = -1;
+
         _mPlanePosition.x += (x * (0.002f));
         _mPlanePosition.y -= (y * (0.002f));
+        if(_mPlanePosition.x >= 1) _mPlanePosition.x = 0;
+        if(_mPlanePosition.x <= -1) _mPlanePosition.x = 0;
+        if(_mPlanePosition.y >= 2) _mPlanePosition.y = 0;
+        if(_mPlanePosition.y <= -2) _mPlanePosition.y = 0;
+
         _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
     }
 
@@ -193,6 +206,8 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     {
         _mPlanePosition.x = 0;
         _mPlanePosition.y = 0;
+        _dX = 0;
+        _dY = 0;
         _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
     }
 
