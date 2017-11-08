@@ -179,15 +179,14 @@
                 style="@android:style/Widget.Material.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/colorPrimaryDark"
                 android:elevation="0dp"
                 android:text="Set as Wallpaper"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/animationSpeedSlider" />
+                app:layout_constraintTop_toBottomOf="@+id/parallaxToggle" />
 
             <SeekBar
                 android:id="@+id/animationSpeedSlider"
@@ -209,6 +208,21 @@
                 android:textAlignment="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/motionGroup" />
+
+            <ToggleButton
+                android:id="@+id/parallaxToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Parallax Effect"
+                android:textAlignment="center"
+                android:textOff="Parallax Effect Off"
+                android:textOn="Parallax Effect On"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/animationSpeedSlider" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

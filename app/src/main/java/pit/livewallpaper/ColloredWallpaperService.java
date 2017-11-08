@@ -30,6 +30,8 @@ public class ColloredWallpaperService extends OpenGLESWallpaperService {
         _mRenderer.changeAnimationSpeed(animSpeed);
         String motion = prefs.getString("motion", "straight");
         _mRenderer.changeMotion(motion);
+        boolean sensors = prefs.getBoolean("sensors", false);
+        _mEngine.activateSensors(sensors);
         return  _mRenderer;
     }
 }

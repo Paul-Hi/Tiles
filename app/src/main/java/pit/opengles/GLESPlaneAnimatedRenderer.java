@@ -1,6 +1,9 @@
 package pit.opengles;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -164,16 +167,32 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }
 
-    public void parallaxMove(float x, float y)
+    public void parallaxMove(float x, float y, boolean reversed)
     {
         if (_mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            float temp = -y;
-            y = x;
+            float temp;
+            if (reversed)
+            {
+                temp = y;
+                y = -x;
+            }
+            else
+            {
+                temp = -y;
+                y = x;
+            }
             x = temp;
         }
         _mPlanePosition.x += (x * (0.002f));
         _mPlanePosition.y -= (y * (0.002f));
+        _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
+    }
+
+    public void resetParallax()
+    {
+        _mPlanePosition.x = 0;
+        _mPlanePosition.y = 0;
         _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
     }
 

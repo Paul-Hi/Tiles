@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.view.SurfaceHolder;
 
@@ -16,10 +17,12 @@ import pit.opengles.Vector3f;
 
 public abstract class OpenGLESWallpaperService extends GLESWallpaperService
 {
+    GLESEngine _mEngine;
     @Override
     public  Engine onCreateEngine()
     {
-        return new OpenGLESEngine();
+        _mEngine =  new OpenGLESEngine();
+        return _mEngine;
     }
 
 
@@ -69,6 +72,8 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
                 ((GLESPlaneAnimatedRenderer) _mRenderer).changeAnimationSpeed(animSpeed);
                 String motion = prefs.getString("motion", "straight");
                 ((GLESPlaneAnimatedRenderer) _mRenderer).changeMotion(motion);
+                boolean sensors = prefs.getBoolean("sensors", false);
+                this.activateSensors(sensors);
             }
         }
     }

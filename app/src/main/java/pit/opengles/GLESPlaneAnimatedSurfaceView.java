@@ -7,7 +7,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
+
+import pit.livewallpaper.GLESWallpaperService;
 
 /**
  * Created by paulh on 14.10.2017.
@@ -16,8 +19,9 @@ import android.view.SurfaceHolder;
 public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements SensorEventListener {
 
     private GLESPlaneAnimatedRenderer _mRenderer;
-    private SensorManager mSensorManager;
-    private Sensor accelerometer;
+    public SensorManager mSensorManager;
+    public Sensor accelerometer;
+    public OrientationEventListener mOrientationListener;
     private boolean rendererHasBeenSet = false;
 
     private float deltaX = 0;
@@ -29,6 +33,8 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
     private float lastY = 0;
     private float roll = 0;
     private float pitch = 0;
+    private boolean reversed = false, undefined = true;
+    public boolean sensors = false;
 
 
     public GLESPlaneAnimatedSurfaceView(Context context)
@@ -36,7 +42,28 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
         super(context);
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        mOrientationListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if(orientation < 180 && orientation >= 0)
+                {
+                    reversed = true;
+                    undefined = false;
+                }
+                else if(orientation > 180)
+                {
+                    reversed = false;
+                    undefined = false;
+                }
+                else
+                    undefined = true;
+            }
+        };
+        if(sensors)
+        {
+            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mOrientationListener.enable();
+        }
     }
 
     public GLESPlaneAnimatedSurfaceView(Context context, AttributeSet attrs)
@@ -44,7 +71,28 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
         super(context, attrs);
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        mOrientationListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if(orientation < 180 && orientation >= 0)
+                {
+                    reversed = true;
+                    undefined = false;
+                }
+                else if(orientation > 180)
+                {
+                    reversed = false;
+                    undefined = false;
+                }
+                else
+                    undefined = true;
+            }
+        };
+        if(sensors)
+        {
+            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mOrientationListener.enable();
+        }
     }
 
     public void setRenderer(GLESPlaneAnimatedRenderer renderer)
@@ -52,6 +100,22 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
         super.setRenderer(renderer);
         _mRenderer = renderer;
         rendererHasBeenSet = true;
+    }
+
+    public void activateSensors(boolean on)
+    {
+        if(on)
+        {
+            sensors = true;
+            mSensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mOrientationListener.enable();
+        }
+        else
+        {
+            sensors = false;
+            mSensorManager.unregisterListener(this);
+            mOrientationListener.disable();
+        }
     }
 
 
@@ -62,6 +126,12 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
         currentX = alpha * currentX + (1 - alpha) * event.values[0];
         currentY = alpha * currentY + (1 - alpha) * event.values[1];
         currentZ = alpha * currentZ + (1 - alpha) * event.values[2];
+
+        if( event.values[2] < 0 && undefined)
+        {
+            if(rendererHasBeenSet) _mRenderer.resetParallax();
+            return;
+        }
 
         double gSum = Math.sqrt(currentX*currentX + currentY*currentY + currentZ*currentZ);
         if (gSum != 0)
@@ -89,7 +159,7 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
 
         if ((deltaX != 0) || (deltaY != 0))
         {
-            if(rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY);
+            if(rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed);
         }
 
     }
@@ -102,15 +172,22 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
     public void onPause()
     {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        if(sensors)
+        {
+            mSensorManager.unregisterListener(this);
+            mOrientationListener.disable();
+        }
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-
+        if(sensors)
+        {
+            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mOrientationListener.enable();
+        }
     }
 
     public GLESPlaneAnimatedRenderer getRenderer() { return _mRenderer; }

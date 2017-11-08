@@ -7,6 +7,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.service.wallpaper.WallpaperService;
+import android.util.Log;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
 import pit.opengles.GLESPlaneAnimatedRenderer;
@@ -24,6 +26,7 @@ public abstract class GLESWallpaperService extends WallpaperService
 
             private SensorManager mSensorManager;
             private Sensor accelerometer;
+            private OrientationEventListener mOrientationListener;
             private GLESPlaneAnimatedRenderer _mRenderer;
 
             private float deltaX = 0;
@@ -35,15 +38,39 @@ public abstract class GLESWallpaperService extends WallpaperService
             private float lastY = 0;
             private float roll = 0;
             private float pitch = 0;
+            private boolean reversed = false;
+            private boolean sensors = false, undefined = true;
+            public Context _mContext;
 
 
-            public WallpaperGLESSurfaceView(Context context)
-            {
+            public WallpaperGLESSurfaceView(Context context) {
                 super(context);
+                _mContext = context;
 
-                mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
                 accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-                mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                mOrientationListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
+                    @Override
+                    public void onOrientationChanged(int orientation) {
+                        if(orientation < 180 && orientation >= 0)
+                        {
+                            reversed = true;
+                            undefined = false;
+                        }
+                        else if(orientation > 180)
+                        {
+                            reversed = false;
+                            undefined = false;
+                        }
+                        else
+                             undefined = true;
+                    }
+                };
+                if(sensors)
+                {
+                    mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                    mOrientationListener.enable();
+                }
             }
 
             @Override
@@ -60,6 +87,12 @@ public abstract class GLESWallpaperService extends WallpaperService
                 currentX = alpha * currentX + (1 - alpha) * event.values[0];
                 currentY = alpha * currentY + (1 - alpha) * event.values[1];
                 currentZ = alpha * currentZ + (1 - alpha) * event.values[2];
+
+                if( event.values[2] < 0 && undefined)
+                {
+                    if(_rendererHasBeenSet) _mRenderer.resetParallax();
+                    return;
+                }
 
                 double gSum = Math.sqrt(currentX*currentX + currentY*currentY + currentZ*currentZ);
                 if (gSum != 0)
@@ -89,7 +122,7 @@ public abstract class GLESWallpaperService extends WallpaperService
 
                 if ((Math.abs(deltaX) > 0.001f) || (Math.abs(deltaY) > 0.001f))
                 {
-                    if(_rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY);
+                    if(_rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed);
                 }
             }
 
@@ -107,18 +140,31 @@ public abstract class GLESWallpaperService extends WallpaperService
             public void onPause()
             {
                 super.onPause();
-                mSensorManager.unregisterListener(this);
+                if(sensors)
+                {
+                    mSensorManager.unregisterListener(this);
+                    mOrientationListener.disable();
+                }
             }
 
             @Override
             public void onResume()
             {
                 super.onResume();
-                mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                if(sensors)
+                {
+                    mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                    mOrientationListener.enable();
+                }
             }
 
             public void onDestroy()
             {
+                if(sensors)
+                {
+                    mSensorManager.unregisterListener(this);
+                    mOrientationListener.disable();
+                }
                 super.onDetachedFromWindow();
             }
         }
@@ -126,11 +172,29 @@ public abstract class GLESWallpaperService extends WallpaperService
         private WallpaperGLESSurfaceView _mSurfaceView;
         private  boolean _rendererHasBeenSet;
 
+
+        public void activateSensors(boolean on)
+        {
+            if(on)
+            {
+                if(_mSurfaceView == null) _mSurfaceView = new WallpaperGLESSurfaceView(GLESWallpaperService.this);
+                _mSurfaceView.sensors = true;
+                _mSurfaceView.mSensorManager.registerListener(_mSurfaceView, _mSurfaceView.accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                _mSurfaceView.mOrientationListener.enable();
+            }
+            else
+            {
+                _mSurfaceView.sensors = false;
+                _mSurfaceView. mSensorManager.unregisterListener(_mSurfaceView);
+                _mSurfaceView.mOrientationListener.disable();
+            }
+        }
+
         @Override
         public void onCreate(SurfaceHolder sH)
         {
             super.onCreate(sH);
-            _mSurfaceView = new WallpaperGLESSurfaceView(GLESWallpaperService.this);
+            if(_mSurfaceView == null) _mSurfaceView = new WallpaperGLESSurfaceView(GLESWallpaperService.this);
         }
 
         @Override

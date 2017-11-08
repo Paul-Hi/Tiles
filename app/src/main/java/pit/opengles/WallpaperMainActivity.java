@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdRequest;
@@ -86,6 +88,8 @@ public class WallpaperMainActivity extends Activity {
         _mRenderer.changeAnimationSpeed(prefs.getFloat("animSpeed", 0.2f));
         editor.putString("motion", prefs.getString("motion", "straight"));
         _mRenderer.changeMotion(prefs.getString("motion", "straight"));
+        editor.putBoolean("sensors", prefs.getBoolean("sensors", false));
+        _mGLSurfaceView.activateSensors(prefs.getBoolean("sensors", false));
 
         Button setButton = (Button) findViewById(R.id.buttonSetWallpaper);
         setButton.setOnClickListener(new Button.OnClickListener() {
@@ -105,6 +109,25 @@ public class WallpaperMainActivity extends Activity {
             }
         });
 
+        ToggleButton parallaxToggle = (ToggleButton) findViewById(R.id.parallaxToggle) ;
+        boolean pT = prefs.getBoolean("sensors", false);
+        if(pT)
+            parallaxToggle.toggle();
+        parallaxToggle.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    _mGLSurfaceView.activateSensors(true);
+                    editor.putBoolean("sensors", true);
+                }
+                else
+                {
+                    _mGLSurfaceView.activateSensors(false);
+                    editor.putBoolean("sensors", false);
+                }
+            }
+        });
 
         RadioButton radioButton;
 
