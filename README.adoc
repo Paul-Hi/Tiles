@@ -25,10 +25,15 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 - [x] light speed configurable
 - [x] settings stored when reconfiguring the live wallpaper
 - [x] admob support to help me get some support for my next test phone (Pixel X?) ;-)
+- [x] working experimental parallax effect
 
+== Next Big Thing ;-)
+* [ ] ui overhaul for better support of many different sized screen
 
 == Roadmap (unsorted)
-* [ ] configuration to hide icon in app drawer
+* [ ] more backgrounds in general
+* [ ] make parallax effect more efficient and more useful
+* [ ] pro version for fans
 * [ ] new real physical effect moves
 * [ ] load phone images to be used as background
 * [ ] ....
