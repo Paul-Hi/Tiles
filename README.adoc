@@ -28,7 +28,7 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 - [x] working experimental parallax effect
 
 == Next Big Thing ;-)
-* [ ] ui overhaul for better support of many different sized screen
+* [ ] ui overhaul for better support of many different sized screens
 
 == Roadmap (unsorted)
 * [ ] more backgrounds in general
