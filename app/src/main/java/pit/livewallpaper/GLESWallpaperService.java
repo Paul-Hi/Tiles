@@ -88,12 +88,6 @@ public abstract class GLESWallpaperService extends WallpaperService
                 currentY = alpha * currentY + (1 - alpha) * event.values[1];
                 currentZ = alpha * currentZ + (1 - alpha) * event.values[2];
 
-                if( event.values[2] < 0 && undefined)
-                {
-                    if(_rendererHasBeenSet) _mRenderer.resetParallax();
-                    return;
-                }
-
                 double gSum = Math.sqrt(currentX*currentX + currentY*currentY + currentZ*currentZ);
                 if (gSum != 0)
                 {

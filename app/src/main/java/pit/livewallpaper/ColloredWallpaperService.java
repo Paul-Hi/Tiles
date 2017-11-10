@@ -24,7 +24,7 @@ public class ColloredWallpaperService extends OpenGLESWallpaperService {
     GLSurfaceView.Renderer getGLESRenderer() {
         _mRenderer = new GLESPlaneAnimatedRenderer(this);
         SharedPreferences prefs = getSharedPreferences("Info", Context.MODE_PRIVATE);
-        String color = prefs.getString("color", "colorful");
+        String color = prefs.getString("color", "COLORFUL");
         _mRenderer.switchColors(color);
         Float animSpeed = prefs.getFloat("animSpeed", 0.2f);
         _mRenderer.changeAnimationSpeed(animSpeed);

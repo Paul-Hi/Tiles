@@ -17,12 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.MobileAds;
@@ -47,6 +51,13 @@ public class WallpaperMainActivity extends Activity {
     private boolean changed;
     private PackageManager p;
     private ComponentName cN;
+    String[] colors = {
+            "RED",
+            "BLUE",
+            "GREEN",
+            "COLORFUL",
+            "PUMKIN",
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +93,8 @@ public class WallpaperMainActivity extends Activity {
             throw new RuntimeException("Error OpenGL ES 2.0 not found");
         }
 
-        editor.putString("color", prefs.getString("color", "colorful"));
-        _mRenderer.switchColors(prefs.getString("color", "colorful"));
+        editor.putString("color", prefs.getString("color", "COLORFUL"));
+        _mRenderer.switchColors(prefs.getString("color", "COLORFUL"));
         editor.putFloat("animSpeed", prefs.getFloat("animSpeed", 0.2f));
         _mRenderer.changeAnimationSpeed(prefs.getFloat("animSpeed", 0.2f));
         editor.putString("motion", prefs.getString("motion", "straight"));
@@ -91,6 +102,68 @@ public class WallpaperMainActivity extends Activity {
         editor.putBoolean("sensors", prefs.getBoolean("sensors", false));
         _mGLSurfaceView.activateSensors(prefs.getBoolean("sensors", false));
 
+
+        //COLOR DROPDOWN
+        Spinner colorDropDown = (Spinner) findViewById(R.id.colorDropdown);
+        ArrayAdapter adapter= new ArrayAdapter(this,android.
+                R.layout.simple_spinner_dropdown_item ,colors);
+
+        colorDropDown.setAdapter(adapter);
+        String currentColor = prefs.getString("color", "COLORFUL");
+        switch (currentColor) {
+            case "RED":
+                colorDropDown.setSelection(0);
+                break;
+            case "BLUE":
+                colorDropDown.setSelection(1);
+                break;
+            case "GREEN":
+                colorDropDown.setSelection(2);
+                break;
+            case "COLORFUL":
+                colorDropDown.setSelection(3);
+                break;
+            case "PUMKIN":
+                colorDropDown.setSelection(4);
+                break;
+        }
+
+        colorDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(prefs.getString("color", "") != colors[(int) id]) changed = true;
+                switch (colors[(int) id]) {
+                    case "RED":
+                        _mRenderer.switchColors("RED");
+                        editor.putString("color", "RED");
+                        break;
+                    case "BLUE":
+                        _mRenderer.switchColors("BLUE");
+                        editor.putString("color", "BLUE");
+                        break;
+                    case "GREEN":
+                        _mRenderer.switchColors("GREEN");
+                        editor.putString("color", "GREEN");
+                        break;
+                    case "COLORFUL":
+                        _mRenderer.switchColors("COLORFUL");
+                        editor.putString("color", "COLORFUL");
+                        break;
+                    case "PUMKIN":
+                        _mRenderer.switchColors("PUMKIN");
+                        editor.putString("color", "PUMKIN");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+            //SET WALLPAPER
         Button setButton = (Button) findViewById(R.id.buttonSetWallpaper);
         setButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -121,71 +194,20 @@ public class WallpaperMainActivity extends Activity {
                 {
                     _mGLSurfaceView.activateSensors(true);
                     editor.putBoolean("sensors", true);
+                    Toast.makeText(getBaseContext(), "Parallax Effect enabled",
+                        Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     _mGLSurfaceView.activateSensors(false);
                     editor.putBoolean("sensors", false);
+                    Toast.makeText(getBaseContext(), "Parallax Effect disabled",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         RadioButton radioButton;
-
-        final RadioGroup col = (RadioGroup) findViewById(R.id.colorGroup);
-        String currentColor = prefs.getString("color", "colorful");
-        switch (currentColor) {
-            case "red":
-                radioButton = (RadioButton) findViewById(R.id.red);
-                radioButton.toggle();
-                break;
-            case "blue":
-                radioButton = (RadioButton) findViewById(R.id.blue);
-                radioButton.toggle();
-                break;
-            case "green":
-                radioButton = (RadioButton) findViewById(R.id.green);
-                radioButton.toggle();
-                break;
-            case "colorful":
-                radioButton = (RadioButton) findViewById(R.id.colorful);
-                radioButton.toggle();
-                break;
-            case "pumkin":
-                radioButton = (RadioButton) findViewById(R.id.pumkin);
-                radioButton.toggle();
-                break;
-        }
-        col.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                changed = true;
-                View radioButton = findViewById(checkedId);
-                int index = group.indexOfChild(radioButton);
-                switch (index) {
-                    case 0:
-                        _mRenderer.switchColors("red");
-                        editor.putString("color", "red");
-                        break;
-                    case 1:
-                        _mRenderer.switchColors("blue");
-                        editor.putString("color", "blue");
-                        break;
-                    case 2:
-                        _mRenderer.switchColors("green");
-                        editor.putString("color", "green");
-                        break;
-                    case 3:
-                        _mRenderer.switchColors("colorful");
-                        editor.putString("color", "colorful");
-                        break;
-                    case 4:
-                        _mRenderer.switchColors("pumkin");
-                        editor.putString("color", "pumkin");
-                        break;
-                }
-            }
-        });
 
         final RadioGroup motion = (RadioGroup) findViewById(R.id.motionGroup);
         String currentMotion = prefs.getString("motion", "straight");

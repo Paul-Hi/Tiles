@@ -44,9 +44,9 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
-    private float _dX = 0, _dY = 0;
     private boolean red = false, blue = false, green = false, colorful  = true, pumkin = false;
     private boolean straight = true, wave = false;
+    private Vector2f _mOffset = new Vector2f(0, 0);
 
 
     private Plane plane;
@@ -154,7 +154,9 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "modelMatrix"), 1, false, _mPlaneTransform.getModelMatrix(), 0);
 
-        GLES20.glUniform3fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "lightPosition"), 1,_mLightPosition.get(), 0);
+        GLES20.glUniform3fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "lightPosition"), 1, _mLightPosition.get(), 0);
+
+        GLES20.glUniform2fv(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "offset"), 1, _mOffset.get(), 0);
 
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -185,30 +187,9 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             }
             x = temp;
         }
-        _dX += (x * (0.001f));
-        _dY -= (y * (0.001f));
-        if(_dX >= 0.5f) _dX = 0.5f;
-        if(_dX <= -0.5f) _dX = -0.5f;
-        if(_dY >= 1) _dY = 1;
-        if(_dY <= -1) _dY = -1;
 
-        _mPlanePosition.x += (x * (0.002f));
-        _mPlanePosition.y -= (y * (0.002f));
-        if(_mPlanePosition.x >= 1) _mPlanePosition.x = 0;
-        if(_mPlanePosition.x <= -1) _mPlanePosition.x = 0;
-        if(_mPlanePosition.y >= 2) _mPlanePosition.y = 0;
-        if(_mPlanePosition.y <= -2) _mPlanePosition.y = 0;
-
-        _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
-    }
-
-    public void resetParallax()
-    {
-        _mPlanePosition.x = 0;
-        _mPlanePosition.y = 0;
-        _dX = 0;
-        _dY = 0;
-        _mPlaneTransform.setPosition(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z);
+        _mOffset.x += (x * (0.001f));
+        _mOffset.y -= (y * (0.001f));
     }
 
     private FloatBuffer floatToBuffer(float[] array)
@@ -223,27 +204,27 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     {
         switch (newColor)
         {
-            case "red":
+            case "RED":
                 _mTexture = _mRed;
                 red = true;
                 blue = green = colorful = pumkin = false;
                 break;
-            case "blue":
+            case "BLUE":
                 _mTexture = _mBlue;
                 blue = true;
                 red = green = colorful = pumkin = false;
                 break;
-            case "green":
+            case "GREEN":
                 _mTexture = _mGreen;
                 green = true;
                 red = blue= colorful = pumkin = false;
                 break;
-            case "colorful":
+            case "COLORFUL":
                 _mTexture = _mColorful;
                 colorful = true;
                 red = green = blue = pumkin = false;
                 break;
-            case "pumkin":
+            case "PUMKIN":
                 _mTexture = _mPumkin;
                 pumkin = true;
                 red = green = blue = colorful = false;

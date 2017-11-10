@@ -30,118 +30,17 @@
             android:orientation="vertical">
 
             <RadioGroup
-                android:id="@+id/colorGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:checkedButton="@+id/colorful"
-                app:layout_constraintEnd_toStartOf="@+id/surfaceView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <RadioButton
-                    android:id="@+id/red"
-                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@android:color/holo_red_dark"
-                    android:text="red"
-                    android:textAllCaps="true"
-                    android:textColorLink="@color/colorAccent"
-                    android:textSize="18sp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mGLSurfaceView" />
-
-                <RadioButton
-                    android:id="@+id/blue"
-                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@android:color/holo_blue_dark"
-                    android:text="blue"
-                    android:textAllCaps="true"
-                    android:textColorLink="@color/colorAccent"
-                    android:textSize="18sp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mGLSurfaceView" />
-
-                <RadioButton
-                    android:id="@+id/green"
-                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="16dp"
-                    android:buttonTint="@android:color/holo_green_dark"
-                    android:text="green"
-                    android:textAllCaps="true"
-                    android:textSize="18sp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mGLSurfaceView" />
-
-                <RadioButton
-                    android:id="@+id/colorful"
-                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/colorPrimaryDark"
-                    android:text="Colorful"
-                    android:textAllCaps="true"
-                    android:textSize="18sp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mGLSurfaceView" />
-
-                <RadioButton
-                    android:id="@+id/pumkin"
-                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/colorPrimaryDark"
-                    android:text="Pumkin"
-                    android:textAllCaps="true"
-                    android:textSize="18sp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mGLSurfaceView" />
-
-            </RadioGroup>
-
-            <RadioGroup
                 android:id="@+id/motionGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:checkedButton="@+id/straight"
-                app:layout_constraintEnd_toStartOf="@+id/surfaceView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/colorGroup">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/surfaceView"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <RadioButton
                     android:id="@+id/straight"
@@ -176,9 +75,9 @@
                 android:id="@+id/surfaceView"
                 android:layout_width="188dp"
                 android:layout_height="311dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -186,7 +85,8 @@
                 style="@android:style/Widget.Material.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:background="@color/colorPrimaryDark"
                 android:elevation="0dp"
                 android:text="Set as Wallpaper"
@@ -212,18 +112,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:text="Animation Speed"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/motionGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/surfaceView" />
 
             <ToggleButton
                 android:id="@+id/parallaxToggle"
                 style="@android:style/Widget.DeviceDefault.Light.Button.Toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Parallax Effect"
@@ -232,25 +132,34 @@
                 android:textOff="Parallax Effect"
                 android:textOn="Parallax Effect"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView6"
                 app:layout_constraintTop_toBottomOf="@+id/animationSpeedSlider" />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:text="(experimental)"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/parallaxToggle"
-                app:layout_constraintEnd_toStartOf="@+id/parallaxToggle"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/parallaxToggle" />
+                app:layout_constraintTop_toBottomOf="@+id/animationSpeedSlider" />
+
+            <Spinner
+                android:id="@+id/colorDropdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="20"
+                android:backgroundTint="@color/colorAccent"
+                android:popupBackground="@android:color/background_light"
+                android:spinnerMode="dialog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/surfaceView"
+                app:layout_constraintTop_toBottomOf="@+id/motionGroup" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
