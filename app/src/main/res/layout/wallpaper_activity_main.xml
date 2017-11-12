@@ -57,13 +57,27 @@
                     tools:layout_editor_absoluteY="232dp" />
 
                 <RadioButton
-                    android:id="@+id/wave"
+                    android:id="@+id/eight"
                     style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/colorAccent"
-                    android:text="wave"
+                    android:text="8"
+                    android:textAllCaps="true"
+                    android:textColorLink="@color/colorAccent"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="232dp" />
+
+                <RadioButton
+                    android:id="@+id/random"
+                    style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorAccent"
+                    android:text="Random"
                     android:textAllCaps="true"
                     android:textColorLink="@color/colorAccent"
                     android:textSize="18sp"
@@ -146,18 +160,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/animationSpeedSlider" />
 
+            <ImageView
+                android:id="@+id/dropdownimage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="80"
+                android:scaleType="centerCrop"
+                android:src="@drawable/spinnerdefault"
+                app:layout_constraintBottom_toBottomOf="@+id/colorDropdown"
+                app:layout_constraintEnd_toEndOf="@+id/colorDropdown"
+                app:layout_constraintStart_toStartOf="@+id/colorDropdown"
+                app:layout_constraintTop_toTopOf="@+id/colorDropdown" />
+
             <Spinner
                 android:id="@+id/colorDropdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
                 android:alpha="20"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@android:color/background_light"
                 android:popupBackground="@android:color/background_light"
                 android:spinnerMode="dialog"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/surfaceView"
                 app:layout_constraintTop_toBottomOf="@+id/motionGroup" />
 

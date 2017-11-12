@@ -21,7 +21,7 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 == Features
 - [x] colored radio buttons for selection
 - [x] imprint and copyright :-)
-- [x] two different paths the light follows (straight and wave)
+- [x] two different paths the light follows (straight and 8)
 - [x] light speed configurable
 - [x] settings stored when reconfiguring the live wallpaper
 - [x] admob support to help me get some support for my next test phone (Pixel X?) ;-)

@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -56,11 +57,12 @@ public class WallpaperMainActivity extends Activity {
             "BLUE",
             "GREEN",
             "COLORFUL",
-            "PUMKIN",
+            "WINTER WONDERLAND",
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallpaper_activity_main);
         changed = false;
@@ -105,26 +107,31 @@ public class WallpaperMainActivity extends Activity {
 
         //COLOR DROPDOWN
         Spinner colorDropDown = (Spinner) findViewById(R.id.colorDropdown);
-        ArrayAdapter adapter= new ArrayAdapter(this,android.
-                R.layout.simple_spinner_dropdown_item ,colors);
+        ArrayAdapter adapter= new ArrayAdapter(this, R.layout.spinner_item, colors);
+        final ImageView dropDownImage = (ImageView) findViewById(R.id.dropdownimage);
 
         colorDropDown.setAdapter(adapter);
         String currentColor = prefs.getString("color", "COLORFUL");
         switch (currentColor) {
             case "RED":
                 colorDropDown.setSelection(0);
+                dropDownImage.setImageResource(R.drawable.spinnerred);
                 break;
             case "BLUE":
                 colorDropDown.setSelection(1);
+                dropDownImage.setImageResource(R.drawable.spinnerblue);
                 break;
             case "GREEN":
                 colorDropDown.setSelection(2);
+                dropDownImage.setImageResource(R.drawable.spinnergreen);
                 break;
             case "COLORFUL":
                 colorDropDown.setSelection(3);
+                dropDownImage.setImageResource(R.drawable.spinnerdefault);
                 break;
-            case "PUMKIN":
+            case "WINTER WONDERLAND":
                 colorDropDown.setSelection(4);
+                dropDownImage.setImageResource(R.drawable.spinnerdefault);
                 break;
         }
 
@@ -136,22 +143,27 @@ public class WallpaperMainActivity extends Activity {
                     case "RED":
                         _mRenderer.switchColors("RED");
                         editor.putString("color", "RED");
+                        dropDownImage.setImageResource(R.drawable.spinnerred);
                         break;
                     case "BLUE":
                         _mRenderer.switchColors("BLUE");
                         editor.putString("color", "BLUE");
+                        dropDownImage.setImageResource(R.drawable.spinnerblue);
                         break;
                     case "GREEN":
                         _mRenderer.switchColors("GREEN");
                         editor.putString("color", "GREEN");
+                        dropDownImage.setImageResource(R.drawable.spinnergreen);
                         break;
                     case "COLORFUL":
                         _mRenderer.switchColors("COLORFUL");
                         editor.putString("color", "COLORFUL");
+                        dropDownImage.setImageResource(R.drawable.spinnerdefault);
                         break;
-                    case "PUMKIN":
-                        _mRenderer.switchColors("PUMKIN");
-                        editor.putString("color", "PUMKIN");
+                    case "WINTER WONDERLAND":
+                        _mRenderer.switchColors("WINTER WONDERLAND");
+                        editor.putString("color", "WINTER WONDERLAND");
+                        dropDownImage.setImageResource(R.drawable.spinnerdefault);
                         break;
                 }
             }
@@ -163,7 +175,7 @@ public class WallpaperMainActivity extends Activity {
         });
 
 
-            //SET WALLPAPER
+        //SET WALLPAPER
         Button setButton = (Button) findViewById(R.id.buttonSetWallpaper);
         setButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -182,6 +194,7 @@ public class WallpaperMainActivity extends Activity {
             }
         });
 
+        //PARALLAX BUTTON
         ToggleButton parallaxToggle = (ToggleButton) findViewById(R.id.parallaxToggle) ;
         boolean pT = prefs.getBoolean("sensors", false);
         if(pT)
@@ -207,8 +220,11 @@ public class WallpaperMainActivity extends Activity {
             }
         });
 
+
+
         RadioButton radioButton;
 
+        // MOTION RADIO GROUP
         final RadioGroup motion = (RadioGroup) findViewById(R.id.motionGroup);
         String currentMotion = prefs.getString("motion", "straight");
         switch (currentMotion) {
@@ -216,8 +232,12 @@ public class WallpaperMainActivity extends Activity {
                 radioButton = (RadioButton) findViewById(R.id.straight);
                 radioButton.toggle();
                 break;
-            case "wave":
-                radioButton = (RadioButton) findViewById(R.id.wave);
+            case "8":
+                radioButton = (RadioButton) findViewById(R.id.eight);
+                radioButton.toggle();
+                break;
+            case "random":
+                radioButton = (RadioButton) findViewById(R.id.random);
                 radioButton.toggle();
                 break;
         }
@@ -233,13 +253,18 @@ public class WallpaperMainActivity extends Activity {
                         editor.putString("motion", "straight");
                         break;
                     case 1:
-                        _mRenderer.changeMotion("wave");
-                        editor.putString("motion", "wave");
+                        _mRenderer.changeMotion("8");
+                        editor.putString("motion", "8");
+                        break;
+                    case 2:
+                        _mRenderer.changeMotion("random");
+                        editor.putString("motion", "random");
                         break;
                 }
             }
         });
 
+        //ANIMATION SPEED SLIDER
         SeekBar animSpeed = (SeekBar) findViewById(R.id.animationSpeedSlider);
         Float currentSpeed = prefs.getFloat("animSpeed", 0.2f);
         animSpeed.setProgress((int)(currentSpeed * 50));

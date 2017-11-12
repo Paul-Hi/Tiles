@@ -37,15 +37,15 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Transform _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
     private Transform _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
     private final int sizeOfFloat = 4;
-    private int _mPumkin = 0;
+    private int _mWinterWonderland = 0;
     private int _mColorful = 0;
     private int _mRed = 0;
     private int _mGreen = 0;
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
-    private boolean red = false, blue = false, green = false, colorful  = true, pumkin = false;
-    private boolean straight = true, wave = false;
+    private boolean red = false, blue = false, green = false, colorful  = true, winterwonderland = false;
+    private boolean straight = true, eight = false, random = false;
     private Vector2f _mOffset = new Vector2f(0, 0);
 
 
@@ -93,7 +93,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.newblue);
         _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.newgreen);
         _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.newcolorful);
-        _mPumkin = ResourceLoader.loadTexture(_mContext, R.drawable.pumkin);
+        _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
 
         if(red)
             _mTexture = _mRed;
@@ -103,8 +103,8 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             _mTexture = _mBlue;
         else if(colorful)
             _mTexture = _mColorful;
-        else if(pumkin)
-            _mTexture =  _mPumkin;
+        else if(winterwonderland)
+            _mTexture = _mWinterWonderland;
     }
 
     @Override
@@ -124,24 +124,43 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
         if(straight) moveStraight(currentTime);
-        else if(wave) moveWave(currentTime);
+        else if(eight) moveEight(currentTime);
+        else if(random) moveRandom(currentTime);
 
         DrawModel();
     }
 
     private void moveStraight(float t)
     {
-        _mLightPosition.y = /*_dY + */(float)Math.sin(t * _mAnimationSpeed) * 0.5f;
-        _mLightPosition.x = /*_dX + */0.0f;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x = 0.0f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
-    private void moveWave(float t)
+    private void moveEight(float t)
     {
-        _mLightPosition.y = /*_dY + */(float)Math.sin(t * _mAnimationSpeed) * 0.5f;
-        _mLightPosition.x  = /*_dX + */(float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
+
+    private float x  = (float)Math.random() - 0.5f;
+    private float y = (float)Math.random() *2 - 1;
+
+    private void moveRandom(float t)
+    {
+        if(_mLightPosition.y < y) _mLightPosition.y += 0.005f * _mAnimationSpeed;
+        if(_mLightPosition.y > y) _mLightPosition.y -= 0.005f * _mAnimationSpeed;
+        if(_mLightPosition.x < x) _mLightPosition.x += 0.005f * _mAnimationSpeed;
+        if(_mLightPosition.x > x) _mLightPosition.x -= 0.005f * _mAnimationSpeed;
+        if(Math.abs(_mLightPosition.y - y) < 0.005f * _mAnimationSpeed && Math.abs(_mLightPosition.x - x) < 0.005f* _mAnimationSpeed)
+        {
+            x  = (float)Math.random() - 0.5f;
+            y = (float)Math.random() *2 - 1;
+        }
+        _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
+    }
+
     private void DrawModel()
     {
         GLES20.glUseProgram(_mShader.getMainProgram());
@@ -207,26 +226,26 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             case "RED":
                 _mTexture = _mRed;
                 red = true;
-                blue = green = colorful = pumkin = false;
+                blue = green = colorful = winterwonderland = false;
                 break;
             case "BLUE":
                 _mTexture = _mBlue;
                 blue = true;
-                red = green = colorful = pumkin = false;
+                red = green = colorful = winterwonderland = false;
                 break;
             case "GREEN":
                 _mTexture = _mGreen;
                 green = true;
-                red = blue= colorful = pumkin = false;
+                red = blue= colorful = winterwonderland = false;
                 break;
             case "COLORFUL":
                 _mTexture = _mColorful;
                 colorful = true;
-                red = green = blue = pumkin = false;
+                red = green = blue = winterwonderland = false;
                 break;
-            case "PUMKIN":
-                _mTexture = _mPumkin;
-                pumkin = true;
+            case "WINTER WONDERLAND":
+                _mTexture = _mWinterWonderland;
+                winterwonderland = true;
                 red = green = blue = colorful = false;
                 break;
         }
@@ -242,12 +261,20 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         if(motion.matches("straight"))
         {
             straight = true;
-            wave = false;
+            eight = false;
+            random = false;
         }
-        else if(motion.matches("wave"))
+        else if(motion.matches("8"))
         {
             straight = false;
-            wave = true;
+            eight = true;
+            random = false;
+        }
+        else if(motion.matches("random"))
+        {
+            straight = false;
+            eight = false;
+            random = true;
         }
     }
 

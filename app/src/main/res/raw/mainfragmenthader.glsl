@@ -14,5 +14,5 @@ void main()
 	float dist = length(FragPos - lightPosition);
 	float light = 0.02 / ((dist * (dist)));
 	if(light > 0.99) light * 2.0;
-	gl_FragColor = mix((texture2D(texture, TexCoords + offset)), vec4(0.0), (texture2D(mask, TexCoords + offset)).a) * light;
+	gl_FragColor = mix((texture2D(texture, TexCoords + offset))* light, texture2D(mask, TexCoords + offset), (texture2D(mask, TexCoords + offset)).a);
 }
