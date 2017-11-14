@@ -5,7 +5,7 @@
 Android Live Wallpaper in Java using OpenGL ES 2.0, texture mapping.
 
 All you can see here is work in progress, for stable Version go to Google Play
-(Free Beta App: https://play.google.com/store/apps/details?id=pit.opengles).
+(Free App: https://play.google.com/store/apps/details?id=pit.opengles).
 If you want to build it for yourself, you can do so
 . Install Android Studio
 . File->New->Import Project
