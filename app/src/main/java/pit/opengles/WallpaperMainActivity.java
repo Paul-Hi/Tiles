@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,6 +58,7 @@ public class WallpaperMainActivity extends Activity {
             "BLUE",
             "GREEN",
             "COLORFUL",
+            "PINK",
             "WINTER WONDERLAND",
     };
 
@@ -115,23 +117,27 @@ public class WallpaperMainActivity extends Activity {
         switch (currentColor) {
             case "RED":
                 colorDropDown.setSelection(0);
-                dropDownImage.setImageResource(R.drawable.spinnerred);
+                dropDownImage.setBackgroundColor(Color.rgb(255, 0, 0));
                 break;
             case "BLUE":
                 colorDropDown.setSelection(1);
-                dropDownImage.setImageResource(R.drawable.spinnerblue);
+                dropDownImage.setBackgroundColor(Color.rgb(0, 0, 255));
                 break;
             case "GREEN":
                 colorDropDown.setSelection(2);
-                dropDownImage.setImageResource(R.drawable.spinnergreen);
+                dropDownImage.setBackgroundColor(Color.rgb(0, 255, 0));
                 break;
             case "COLORFUL":
                 colorDropDown.setSelection(3);
-                dropDownImage.setImageResource(R.drawable.spinnerdefault);
+                dropDownImage.setBackgroundColor(Color.rgb(100, 100, 100));
+                break;
+            case "PINK":
+                colorDropDown.setSelection(4);
+                dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
                 break;
             case "WINTER WONDERLAND":
-                colorDropDown.setSelection(4);
-                dropDownImage.setImageResource(R.drawable.spinnerdefault);
+                colorDropDown.setSelection(5);
+                dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
                 break;
         }
 
@@ -143,27 +149,32 @@ public class WallpaperMainActivity extends Activity {
                     case "RED":
                         _mRenderer.switchColors("RED");
                         editor.putString("color", "RED");
-                        dropDownImage.setImageResource(R.drawable.spinnerred);
+                        dropDownImage.setBackgroundColor(Color.rgb(255, 0, 0));
                         break;
                     case "BLUE":
                         _mRenderer.switchColors("BLUE");
                         editor.putString("color", "BLUE");
-                        dropDownImage.setImageResource(R.drawable.spinnerblue);
+                        dropDownImage.setBackgroundColor(Color.rgb(0, 0, 255));
                         break;
                     case "GREEN":
                         _mRenderer.switchColors("GREEN");
                         editor.putString("color", "GREEN");
-                        dropDownImage.setImageResource(R.drawable.spinnergreen);
+                        dropDownImage.setBackgroundColor(Color.rgb(0, 255, 0));
                         break;
                     case "COLORFUL":
                         _mRenderer.switchColors("COLORFUL");
                         editor.putString("color", "COLORFUL");
-                        dropDownImage.setImageResource(R.drawable.spinnerdefault);
+                        dropDownImage.setBackgroundColor(Color.rgb(100, 100, 100));
+                        break;
+                    case "PINK":
+                        _mRenderer.switchColors("PINK");
+                        editor.putString("color", "PINK");
+                        dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
                         break;
                     case "WINTER WONDERLAND":
                         _mRenderer.switchColors("WINTER WONDERLAND");
                         editor.putString("color", "WINTER WONDERLAND");
-                        dropDownImage.setImageResource(R.drawable.spinnerdefault);
+                        dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
                         break;
                 }
             }

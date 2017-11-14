@@ -19,20 +19,20 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 
 
 == Features
-- [x] colored radio buttons for selection
+- [x] colored dropdown menu for selection
+- [x] five different backgrounds (more to come)
 - [x] imprint and copyright :-)
-- [x] two different paths the light follows (straight and 8)
+- [x] different paths the light follows (straight, 8 and random movement)
 - [x] light speed configurable
+- [x] working optimized parallax effect
 - [x] settings stored when reconfiguring the live wallpaper
 - [x] admob support to help me get some support for my next test phone (Pixel X?) ;-)
-- [x] working experimental parallax effect
+- [x] ui support of many different sized screens (Phone, Tablet)
 
 == Next Big Thing ;-)
-* [ ] ui overhaul for better support of many different sized screens
+* [ ] more backgrounds in general
 
 == Roadmap (unsorted)
-* [ ] more backgrounds in general
-* [ ] make parallax effect more efficient and more useful
 * [ ] pro version for fans
 * [ ] new real physical effect moves
 * [ ] load phone images to be used as background

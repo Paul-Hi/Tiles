@@ -37,6 +37,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Transform _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
     private Transform _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
     private final int sizeOfFloat = 4;
+    private int _mPink = 0;
     private int _mWinterWonderland = 0;
     private int _mColorful = 0;
     private int _mRed = 0;
@@ -44,7 +45,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
-    private boolean red = false, blue = false, green = false, colorful  = true, winterwonderland = false;
+    private boolean red = false, blue = false, green = false, colorful  = true, pink = false, winterwonderland = false;
     private boolean straight = true, eight = false, random = false;
     private Vector2f _mOffset = new Vector2f(0, 0);
 
@@ -94,6 +95,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.newgreen);
         _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.newcolorful);
         _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
+        _mPink = ResourceLoader.loadTexture(_mContext, R.drawable.newpink);
 
         if(red)
             _mTexture = _mRed;
@@ -103,6 +105,8 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             _mTexture = _mBlue;
         else if(colorful)
             _mTexture = _mColorful;
+        else if(pink)
+            _mTexture = _mPink;
         else if(winterwonderland)
             _mTexture = _mWinterWonderland;
     }
@@ -226,27 +230,32 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             case "RED":
                 _mTexture = _mRed;
                 red = true;
-                blue = green = colorful = winterwonderland = false;
+                blue = green = colorful = winterwonderland = pink = false;
                 break;
             case "BLUE":
                 _mTexture = _mBlue;
                 blue = true;
-                red = green = colorful = winterwonderland = false;
+                red = green = colorful = winterwonderland = pink = false;
                 break;
             case "GREEN":
                 _mTexture = _mGreen;
                 green = true;
-                red = blue= colorful = winterwonderland = false;
+                red = blue= colorful = winterwonderland = pink = false;
                 break;
             case "COLORFUL":
                 _mTexture = _mColorful;
                 colorful = true;
-                red = green = blue = winterwonderland = false;
+                red = green = blue = winterwonderland = pink = false;
+                break;
+            case "PINK":
+                _mTexture = _mPink;
+                pink = true;
+                red = green = blue = colorful = winterwonderland = false;
                 break;
             case "WINTER WONDERLAND":
                 _mTexture = _mWinterWonderland;
                 winterwonderland = true;
-                red = green = blue = colorful = false;
+                red = green = blue = colorful = pink = false;
                 break;
         }
     }

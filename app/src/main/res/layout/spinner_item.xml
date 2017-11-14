@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:textSize="18sp"
     android:padding="10dp"
+    android:textAppearance="@style/Base.Animation.AppCompat.DropDownUp"
     />
