@@ -7,7 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.service.wallpaper.WallpaperService;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 

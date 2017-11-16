@@ -1,14 +1,7 @@
 package pit.opengles;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
@@ -37,6 +30,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Transform _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
     private Transform _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
     private final int sizeOfFloat = 4;
+    private int _mAutumn = 0;
     private int _mPink = 0;
     private int _mWinterWonderland = 0;
     private int _mColorful = 0;
@@ -45,7 +39,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
-    private boolean red = false, blue = false, green = false, colorful  = true, pink = false, winterwonderland = false;
+    private boolean red = false, blue = false, green = false, colorful  = true, pink = false, autumn = false, winterwonderland = false;
     private boolean straight = true, eight = false, random = false;
     private Vector2f _mOffset = new Vector2f(0, 0);
 
@@ -72,7 +66,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         createVisuals();
     }
 
-    public void createVisuals()
+    private void createVisuals()
     {
         //vertices
         float[] vertices = plane.vertices;
@@ -94,8 +88,9 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.newblue);
         _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.newgreen);
         _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.newcolorful);
-        _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
         _mPink = ResourceLoader.loadTexture(_mContext, R.drawable.newpink);
+        _mAutumn = ResourceLoader.loadTexture(_mContext, R.drawable.autumn);
+        _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
 
         if(red)
             _mTexture = _mRed;
@@ -107,6 +102,8 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             _mTexture = _mColorful;
         else if(pink)
             _mTexture = _mPink;
+        else if(autumn)
+            _mTexture = _mAutumn;
         else if(winterwonderland)
             _mTexture = _mWinterWonderland;
     }
@@ -118,46 +115,44 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mCamera.onSurfaceChanged(width, height);
     }
 
-    private long time = 0;
-
     @Override
     public void onDrawFrame(GL10 notUsed)
     {
-        time = SystemClock.uptimeMillis();
+        long time = SystemClock.uptimeMillis();
         float currentTime = time/1000.0f;
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
         if(straight) moveStraight(currentTime);
         else if(eight) moveEight(currentTime);
-        else if(random) moveRandom(currentTime);
+        else if(random) moveRandom();
 
         DrawModel();
     }
 
     private void moveStraight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed);
         _mLightPosition.x = 0.0f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
     private void moveEight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.5f;
-        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.25f;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed);
+        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.5f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
     private float x  = (float)Math.random() - 0.5f;
     private float y = (float)Math.random() *2 - 1;
 
-    private void moveRandom(float t)
+    private void moveRandom()
     {
-        if(_mLightPosition.y < y) _mLightPosition.y += 0.005f * _mAnimationSpeed;
-        if(_mLightPosition.y > y) _mLightPosition.y -= 0.005f * _mAnimationSpeed;
-        if(_mLightPosition.x < x) _mLightPosition.x += 0.005f * _mAnimationSpeed;
-        if(_mLightPosition.x > x) _mLightPosition.x -= 0.005f * _mAnimationSpeed;
-        if(Math.abs(_mLightPosition.y - y) < 0.005f * _mAnimationSpeed && Math.abs(_mLightPosition.x - x) < 0.005f* _mAnimationSpeed)
+        if(_mLightPosition.y < y) _mLightPosition.y += 0.01f * _mAnimationSpeed;
+        if(_mLightPosition.y > y) _mLightPosition.y -= 0.01f * _mAnimationSpeed;
+        if(_mLightPosition.x < x) _mLightPosition.x += 0.01f * _mAnimationSpeed;
+        if(_mLightPosition.x > x) _mLightPosition.x -= 0.01f * _mAnimationSpeed;
+        if(Math.abs(_mLightPosition.y - y) < 0.01f * _mAnimationSpeed && Math.abs(_mLightPosition.x - x) < 0.01f* _mAnimationSpeed)
         {
             x  = (float)Math.random() - 0.5f;
             y = (float)Math.random() *2 - 1;
@@ -230,32 +225,37 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             case "RED":
                 _mTexture = _mRed;
                 red = true;
-                blue = green = colorful = winterwonderland = pink = false;
+                blue = green = colorful = winterwonderland = pink = autumn = false;
                 break;
             case "BLUE":
                 _mTexture = _mBlue;
                 blue = true;
-                red = green = colorful = winterwonderland = pink = false;
+                red = green = colorful = winterwonderland = pink = autumn = false;
                 break;
             case "GREEN":
                 _mTexture = _mGreen;
                 green = true;
-                red = blue= colorful = winterwonderland = pink = false;
+                red = blue= colorful = winterwonderland = pink = autumn = false;
                 break;
             case "COLORFUL":
                 _mTexture = _mColorful;
                 colorful = true;
-                red = green = blue = winterwonderland = pink = false;
+                red = green = blue = winterwonderland = pink = autumn = false;
                 break;
             case "PINK":
                 _mTexture = _mPink;
                 pink = true;
-                red = green = blue = colorful = winterwonderland = false;
+                red = green = blue = colorful = winterwonderland = autumn = false;
+                break;
+            case "AUTUMN":
+                _mTexture = _mAutumn;
+                autumn = true;
+                red = green = blue = colorful = winterwonderland = pink = false;
                 break;
             case "WINTER WONDERLAND":
                 _mTexture = _mWinterWonderland;
                 winterwonderland = true;
-                red = green = blue = colorful = pink = false;
+                red = green = blue = colorful = pink = autumn = false;
                 break;
         }
     }
@@ -286,5 +286,4 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
             random = true;
         }
     }
-
 }

@@ -5,6 +5,9 @@
 
     <item
         android:id="@+id/impressum"
-        android:title="Impressum" />
+        android:title="@string/menuImp" />
+    <item
+        android:id="@+id/rate"
+        android:title="@string/menuRate" />
 
 </menu>

@@ -8,9 +8,6 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.OrientationEventListener;
-import android.view.SurfaceHolder;
-
-import pit.livewallpaper.GLESWallpaperService;
 
 /**
  * Created by paulh on 14.10.2017.
@@ -160,7 +157,6 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-
 
     @Override
     public void onPause()

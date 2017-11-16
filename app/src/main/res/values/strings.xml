@@ -3,4 +3,42 @@
     <string name="short_name">Tiles</string>
     <string name="ad_mob_id">ca-app-pub-6496680407589387~2702520004</string>
     <string name="ad_mob_banner">ca-app-pub-6496680407589387/7714995925</string>
+    <string name="straight">straight</string>
+    <string name="eight">8</string>
+    <string name="rand">random</string>
+    <string name="animSpeed">Animation Speed</string>
+    <string name="exp">(experimental)</string>
+    <string name="parallax">Parallax Effect</string>
+    <string name="pOn">Parallax Effect enabled</string>
+    <string name="pOff">Parallax Effect disabled</string>
+    <string name="colordropdown">background color</string>
+    <string name="readdropdown">readable color fade</string>
+    <string name="set">Set as Wallpaper</string>
+    <string name="red">RED</string>
+    <string-array name="colors">
+        <item>RED</item>
+        <item>BLUE</item>
+        <item>GREEN</item>
+        <item>COLORFUL</item>
+        <item>PINK</item>
+        <item>AUTUMN</item>
+        <item>WINTER WONDERLAND</item>
+    </string-array>
+    <string-array name="colors_intern">
+        <item>RED</item>
+        <item>BLUE</item>
+        <item>GREEN</item>
+        <item>COLORFUL</item>
+        <item>PINK</item>
+        <item>AUTUMN</item>
+        <item>WINTER WONDERLAND</item>
+    </string-array>
+    <string name="menuImp">Impressum</string>
+    <string name="menuRate">Rate App</string>
+    <string name="impr">Impressum</string>
+    <string name="feedback">Feedback To:</string>
+    <string name="mail">paulhihihi@gmail.com</string>
+    <string name="rateText">If you want to, you can rate the app and give me useful feedback in the Google Play Store too :)</string>
+    <string name="rateButton">Rate App</string>
+    <string name="copyright">_ @Copyright 2017 Paul Himmler _</string>
 </resources>

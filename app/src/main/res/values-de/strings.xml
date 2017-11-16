@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Tiles Live Wallpaper</string>
+    <string name="short_name">Tiles</string>
+    <string name="ad_mob_id">ca-app-pub-6496680407589387~2702520004</string>
+    <string name="ad_mob_banner">ca-app-pub-6496680407589387/7714995925</string>
+    <string name="straight">gerade</string>
+    <string name="eight">8</string>
+    <string name="rand">zufällig</string>
+    <string name="animSpeed">Animationsgeschwindigkeit</string>
+    <string name="exp">(experimentell)</string>
+    <string name="parallax">Parallax-Effekt</string>
+    <string name="pOn">Parallax-Effekt aktiviert</string>
+    <string name="pOff">Parallax-Effekt deaktiviert</string>
+    <string name="colordropdown">Hintergrundfarbe</string>
+    <string name="readdropdown">Lesbarer Farbverlauf</string>
+    <string name="set">Hintergrundbild setzen</string>
+    <string-array name="colors">
+        <item>ROT</item>
+        <item>BLAU</item>
+        <item>GRÜN</item>
+        <item>FARBENFROH</item>
+        <item>PINK</item>
+        <item>HERBST</item>
+        <item>WINTER WUNDERLAND</item>
+    </string-array>
+    <string name="menuImp">Impressum</string>
+    <string name="menuRate">App bewerten</string>
+    <string name="impr">Impressum</string>
+    <string name="feedback">Feedback An:</string>
+    <string name="mail">paulhihihi@gmail.com</string>
+    <string name="rateText">Ich freue mich über eine App Bewertung oder auch über Feedback im Google Play Store :)</string>
+    <string name="rateButton">App bewerten</string>
+    <string name="copyright">_ @Copyright 2017 Paul Himmler _</string>
+</resources>

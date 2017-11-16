@@ -10,9 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +26,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -50,26 +48,30 @@ public class WallpaperMainActivity extends Activity {
     private AdView _mAdView;
     public SharedPreferences prefs;
     public SharedPreferences.Editor editor;
-    private boolean changed;
-    private PackageManager p;
-    private ComponentName cN;
-    String[] colors = {
-            "RED",
-            "BLUE",
-            "GREEN",
-            "COLORFUL",
-            "PINK",
-            "WINTER WONDERLAND",
-    };
+    private boolean changedColor;
+    private boolean changedMotion;
+    private boolean changedSpeed;
+    private boolean changedParallax;
+    private boolean wasParallax;
+    private String movement;
+    private String color;
+    private String[] colors;
+    private String[] colors_intern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        colors = getResources().getStringArray(R.array.colors);
+        colors_intern = getResources().getStringArray(R.array.colors_intern);
         setContentView(R.layout.wallpaper_activity_main);
-        changed = false;
-        p = getPackageManager();
-        cN = new ComponentName(this, WallpaperMainActivity.class);
+        changedColor = false;
+        changedMotion = false;
+        changedSpeed = false;
+        changedParallax = false;
+        wasParallax = false;
+        movement = "";
+        color = "";
 
         MobileAds.initialize(this, getString(R.string.ad_mob_id));
 
@@ -99,17 +101,20 @@ public class WallpaperMainActivity extends Activity {
 
         editor.putString("color", prefs.getString("color", "COLORFUL"));
         _mRenderer.switchColors(prefs.getString("color", "COLORFUL"));
+        color =  prefs.getString("color", "");
         editor.putFloat("animSpeed", prefs.getFloat("animSpeed", 0.2f));
         _mRenderer.changeAnimationSpeed(prefs.getFloat("animSpeed", 0.2f));
         editor.putString("motion", prefs.getString("motion", "straight"));
         _mRenderer.changeMotion(prefs.getString("motion", "straight"));
+        movement = prefs.getString("motion", "");
         editor.putBoolean("sensors", prefs.getBoolean("sensors", false));
         _mGLSurfaceView.activateSensors(prefs.getBoolean("sensors", false));
+        wasParallax = prefs.getBoolean("sensors", false);
 
 
         //COLOR DROPDOWN
         Spinner colorDropDown = (Spinner) findViewById(R.id.colorDropdown);
-        ArrayAdapter adapter= new ArrayAdapter(this, R.layout.spinner_item, colors);
+        ArrayAdapter adapter= new ArrayAdapter<>(this, R.layout.spinner_item, colors);
         final ImageView dropDownImage = (ImageView) findViewById(R.id.dropdownimage);
 
         colorDropDown.setAdapter(adapter);
@@ -135,8 +140,12 @@ public class WallpaperMainActivity extends Activity {
                 colorDropDown.setSelection(4);
                 dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
                 break;
-            case "WINTER WONDERLAND":
+            case "AUTUMN":
                 colorDropDown.setSelection(5);
+                dropDownImage.setBackgroundColor(Color.rgb(175, 125, 0));
+                break;
+            case "WINTER WONDERLAND":
+                colorDropDown.setSelection(6);
                 dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
                 break;
         }
@@ -144,34 +153,40 @@ public class WallpaperMainActivity extends Activity {
         colorDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(prefs.getString("color", "") != colors[(int) id]) changed = true;
-                switch (colors[(int) id]) {
-                    case "RED":
+                if(!color.equals(colors_intern[(int) id])) changedColor = true;
+                else changedColor = false;
+                switch ((int)id) {
+                    case 0:
                         _mRenderer.switchColors("RED");
                         editor.putString("color", "RED");
                         dropDownImage.setBackgroundColor(Color.rgb(255, 0, 0));
                         break;
-                    case "BLUE":
+                    case 1:
                         _mRenderer.switchColors("BLUE");
                         editor.putString("color", "BLUE");
                         dropDownImage.setBackgroundColor(Color.rgb(0, 0, 255));
                         break;
-                    case "GREEN":
+                    case 2:
                         _mRenderer.switchColors("GREEN");
                         editor.putString("color", "GREEN");
                         dropDownImage.setBackgroundColor(Color.rgb(0, 255, 0));
                         break;
-                    case "COLORFUL":
+                    case 3:
                         _mRenderer.switchColors("COLORFUL");
                         editor.putString("color", "COLORFUL");
                         dropDownImage.setBackgroundColor(Color.rgb(100, 100, 100));
                         break;
-                    case "PINK":
+                    case 4:
                         _mRenderer.switchColors("PINK");
                         editor.putString("color", "PINK");
                         dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
                         break;
-                    case "WINTER WONDERLAND":
+                    case 5:
+                        _mRenderer.switchColors("AUTUMN");
+                        editor.putString("color", "AUTUMN");
+                        dropDownImage.setBackgroundColor(Color.rgb(175, 125, 0));
+                        break;
+                    case 6:
                         _mRenderer.switchColors("WINTER WONDERLAND");
                         editor.putString("color", "WINTER WONDERLAND");
                         dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
@@ -192,7 +207,10 @@ public class WallpaperMainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 editor.apply();
-                changed = false;
+                changedColor = false;
+                changedMotion = false;
+                changedSpeed = false;
+                changedParallax = false;
                 try {
                     Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
                     intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(WallpaperMainActivity.this, ColloredWallpaperService.class));
@@ -213,19 +231,23 @@ public class WallpaperMainActivity extends Activity {
         parallaxToggle.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                changed = true;
+
                 if(isChecked)
                 {
+                    if(!wasParallax) changedParallax = true;
+                    else changedParallax = false;
                     _mGLSurfaceView.activateSensors(true);
                     editor.putBoolean("sensors", true);
-                    Toast.makeText(getBaseContext(), "Parallax Effect enabled",
+                    Toast.makeText(getBaseContext(), R.string.pOn,
                         Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
+                    if(wasParallax) changedParallax = true;
+                    else changedParallax = false;
                     _mGLSurfaceView.activateSensors(false);
                     editor.putBoolean("sensors", false);
-                    Toast.makeText(getBaseContext(), "Parallax Effect disabled",
+                    Toast.makeText(getBaseContext(), R.string.pOff,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -255,19 +277,24 @@ public class WallpaperMainActivity extends Activity {
         motion.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                changed = true;
                 View radioButton = findViewById(checkedId);
                 int index = group.indexOfChild(radioButton);
                 switch (index) {
                     case 0:
+                        if(!movement.equals("straight")) changedMotion = true;
+                        else changedMotion = false;
                         _mRenderer.changeMotion("straight");
                         editor.putString("motion", "straight");
                         break;
                     case 1:
+                        if(!movement.equals("8")) changedMotion = true;
+                        else changedMotion = false;
                         _mRenderer.changeMotion("8");
                         editor.putString("motion", "8");
                         break;
                     case 2:
+                        if(!movement.equals("random")) changedMotion = true;
+                        else changedMotion = false;
                         _mRenderer.changeMotion("random");
                         editor.putString("motion", "random");
                         break;
@@ -282,7 +309,7 @@ public class WallpaperMainActivity extends Activity {
         animSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changed = true;
+                changedSpeed = true;
                 float animSpeed = progress/50.0f;
                 _mRenderer.changeAnimationSpeed(animSpeed);
                 editor.putFloat("animSpeed", animSpeed);
@@ -322,12 +349,20 @@ public class WallpaperMainActivity extends Activity {
         switch(item.getItemId())
         {
             case R.id.impressum:
-            {
                 Intent intent = new Intent();
                 intent.setClassName(this, "pit.opengles.ImpressumActivity");
                 startActivity(intent);
                 return true;
-            }
+            case R.id.rate:
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market:://details?id=pit.opengles")));
+                }
+                catch(Exception e)
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pit.opengles")));
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -343,7 +378,7 @@ public class WallpaperMainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(!changed)
+        if(!(changedColor || changedMotion || changedParallax || changedSpeed))
         {
             WallpaperMainActivity.super.onBackPressed();
             return;

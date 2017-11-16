@@ -4,12 +4,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
-import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.view.SurfaceHolder;
-
 import pit.opengles.GLESPlaneAnimatedRenderer;
-import pit.opengles.Vector3f;
 
 /**
  * Created by paulh on 13.10.2017.
