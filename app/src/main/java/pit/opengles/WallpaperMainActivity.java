@@ -304,13 +304,13 @@ public class WallpaperMainActivity extends Activity {
 
         //ANIMATION SPEED SLIDER
         SeekBar animSpeed = (SeekBar) findViewById(R.id.animationSpeedSlider);
-        Float currentSpeed = prefs.getFloat("animSpeed", 0.2f);
-        animSpeed.setProgress((int)(currentSpeed * 50));
+        Float currentSpeed = prefs.getFloat("animSpeed", 0.5f);
+        animSpeed.setProgress((int)(currentSpeed * 100));
         animSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 changedSpeed = true;
-                float animSpeed = progress/50.0f;
+                float animSpeed = progress/100.0f;
                 _mRenderer.changeAnimationSpeed(animSpeed);
                 editor.putFloat("animSpeed", animSpeed);
             }

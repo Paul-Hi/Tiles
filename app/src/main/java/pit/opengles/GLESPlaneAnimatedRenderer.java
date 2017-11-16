@@ -23,7 +23,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private Shader _mShader;
     private FloatBuffer _mVertexBuffer;
     private FloatBuffer _mTexCoordBuffer;
-    private float _mAnimationSpeed = 0.2f;
+    private float _mAnimationSpeed = 0.5f;
     private Camera _mCamera;
     private Vector3f _mLightPosition = new Vector3f(0, 0, -1);;
     private Vector3f _mPlanePosition = new Vector3f(0, 0, 0);
@@ -42,7 +42,6 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private boolean red = false, blue = false, green = false, colorful  = true, pink = false, autumn = false, winterwonderland = false;
     private boolean straight = true, eight = false, random = false;
     private Vector2f _mOffset = new Vector2f(0, 0);
-
 
     private Plane plane;
 
@@ -83,12 +82,12 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glEnableVertexAttribArray(1);
         GLES20.glVertexAttribPointer(1, 2, GLES20.GL_FLOAT, false, 0, _mTexCoordBuffer);
 
-        _mMask = ResourceLoader.loadTexture(_mContext, R.drawable.newmask);
-        _mRed = ResourceLoader.loadTexture(_mContext, R.drawable.newred);
-        _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.newblue);
-        _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.newgreen);
-        _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.newcolorful);
-        _mPink = ResourceLoader.loadTexture(_mContext, R.drawable.newpink);
+        _mMask = ResourceLoader.loadTexture(_mContext, R.drawable.mask);
+        _mRed = ResourceLoader.loadTexture(_mContext, R.drawable.red);
+        _mBlue = ResourceLoader.loadTexture(_mContext, R.drawable.blue);
+        _mGreen = ResourceLoader.loadTexture(_mContext, R.drawable.green);
+        _mColorful = ResourceLoader.loadTexture(_mContext, R.drawable.colorful);
+        _mPink = ResourceLoader.loadTexture(_mContext, R.drawable.pink);
         _mAutumn = ResourceLoader.loadTexture(_mContext, R.drawable.autumn);
         _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
 
@@ -131,20 +130,20 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
 
     private void moveStraight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed);
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.9f;
         _mLightPosition.x = 0.0f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
     private void moveEight(float t)
     {
-        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed);
-        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.5f;
+        _mLightPosition.y = (float)Math.sin(t * _mAnimationSpeed) * 0.9f;
+        _mLightPosition.x  = (float)Math.sin(t * _mAnimationSpeed * 2) * 0.4f;
         _mLightTransform.setPosition(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z);
     }
 
-    private float x  = (float)Math.random() - 0.5f;
-    private float y = (float)Math.random() *2 - 1;
+    private float x  = (float)Math.random() - 0.6f;
+    private float y = (float)Math.random() *1.8f - 0.9f;
 
     private void moveRandom()
     {

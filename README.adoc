@@ -35,5 +35,4 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 == Roadmap (unsorted)
 * [ ] pro version for fans
 * [ ] new real physical effect moves
-* [ ] load phone images to be used as background
 * [ ] ....

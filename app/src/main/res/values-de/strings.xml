@@ -30,5 +30,6 @@
     <string name="mail">paulhihihi@gmail.com</string>
     <string name="rateText">Ich freue mich über eine App Bewertung oder auch über Feedback im Google Play Store :)</string>
     <string name="rateButton">App bewerten</string>
+    <string name="license">Lizenziert unter der BSD-3-License</string>
     <string name="copyright">_ @Copyright 2017 Paul Himmler _</string>
 </resources>
