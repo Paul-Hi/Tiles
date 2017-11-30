@@ -7,14 +7,12 @@
     <string name="eight">8</string>
     <string name="rand">random</string>
     <string name="animSpeed">Animation Speed</string>
-    <string name="exp">(experimental)</string>
     <string name="parallax">Parallax Effect</string>
     <string name="pOn">Parallax Effect enabled</string>
     <string name="pOff">Parallax Effect disabled</string>
     <string name="colordropdown">background color</string>
     <string name="readdropdown">readable color fade</string>
     <string name="set">Set as Wallpaper</string>
-    <string name="red">RED</string>
     <string-array name="colors">
         <item>RED</item>
         <item>BLUE</item>
@@ -33,6 +31,7 @@
         <item>AUTUMN</item>
         <item>WINTER WONDERLAND</item>
     </string-array>
+    <string name="notification">In the mood for a change? :)</string>
     <string name="menuImp">Impressum</string>
     <string name="menuRate">Rate App</string>
     <string name="impr">Impressum</string>

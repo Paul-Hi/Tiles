@@ -39,6 +39,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private int _mBlue = 0;
     private int _mTexture = 0;
     private int _mMask = 0;
+    private int _mBump = 0;
     private boolean red = false, blue = false, green = false, colorful  = true, pink = false, autumn = false, winterwonderland = false;
     private boolean straight = true, eight = false, random = false;
     private Vector2f _mOffset = new Vector2f(0, 0);
@@ -90,6 +91,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         _mPink = ResourceLoader.loadTexture(_mContext, R.drawable.pink);
         _mAutumn = ResourceLoader.loadTexture(_mContext, R.drawable.autumn);
         _mWinterWonderland = ResourceLoader.loadTexture(_mContext, R.drawable.winterwonderland);
+        _mBump = ResourceLoader.loadTexture(_mContext, R.drawable.bump);
 
         if(red)
             _mTexture = _mRed;
@@ -183,6 +185,10 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _mTexture);
         GLES20.glUniform1i(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "texture"), 1);
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _mBump);
+        GLES20.glUniform1i(GLES20.glGetUniformLocation(_mShader.getMainProgram(), "bumptexture"), 2);
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }

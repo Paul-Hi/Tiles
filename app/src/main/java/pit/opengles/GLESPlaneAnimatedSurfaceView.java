@@ -30,7 +30,7 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
     private float lastY = 0;
     private float roll = 0;
     private float pitch = 0;
-    private boolean reversed = false, undefined = true;
+    private boolean reversed = false;
     public boolean sensors = false;
 
 
@@ -45,22 +45,13 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
                 if(orientation < 180 && orientation >= 0)
                 {
                     reversed = true;
-                    undefined = false;
                 }
                 else if(orientation > 180)
                 {
                     reversed = false;
-                    undefined = false;
                 }
-                else
-                    undefined = true;
             }
         };
-        if(sensors)
-        {
-            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-            mOrientationListener.enable();
-        }
     }
 
     public GLESPlaneAnimatedSurfaceView(Context context, AttributeSet attrs)
@@ -74,22 +65,13 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
                 if(orientation < 180 && orientation >= 0)
                 {
                     reversed = true;
-                    undefined = false;
                 }
                 else if(orientation > 180)
                 {
                     reversed = false;
-                    undefined = false;
                 }
-                else
-                    undefined = true;
             }
         };
-        if(sensors)
-        {
-            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-            mOrientationListener.enable();
-        }
     }
 
     public void setRenderer(GLESPlaneAnimatedRenderer renderer)

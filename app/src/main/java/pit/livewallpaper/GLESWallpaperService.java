@@ -20,6 +20,9 @@ public abstract class GLESWallpaperService extends WallpaperService
 {
     public class GLESEngine extends Engine
     {
+        private WallpaperGLESSurfaceView _mSurfaceView;
+        private  boolean _rendererHasBeenSet;
+
         class WallpaperGLESSurfaceView extends GLSurfaceView implements SensorEventListener
         {
 
@@ -38,7 +41,7 @@ public abstract class GLESWallpaperService extends WallpaperService
             private float roll = 0;
             private float pitch = 0;
             private boolean reversed = false;
-            private boolean sensors = false, undefined = true;
+            private boolean sensors = false;
             public Context _mContext;
 
 
@@ -54,22 +57,13 @@ public abstract class GLESWallpaperService extends WallpaperService
                         if(orientation < 180 && orientation >= 0)
                         {
                             reversed = true;
-                            undefined = false;
                         }
                         else if(orientation > 180)
                         {
                             reversed = false;
-                            undefined = false;
                         }
-                        else
-                             undefined = true;
                     }
                 };
-                if(sensors)
-                {
-                    mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-                    mOrientationListener.enable();
-                }
             }
 
             @Override
@@ -161,9 +155,6 @@ public abstract class GLESWallpaperService extends WallpaperService
                 super.onDetachedFromWindow();
             }
         }
-
-        private WallpaperGLESSurfaceView _mSurfaceView;
-        private  boolean _rendererHasBeenSet;
 
 
         public void activateSensors(boolean on)

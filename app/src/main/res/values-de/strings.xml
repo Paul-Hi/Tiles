@@ -7,7 +7,6 @@
     <string name="eight">8</string>
     <string name="rand">zufällig</string>
     <string name="animSpeed">Animationsgeschwindigkeit</string>
-    <string name="exp">(experimentell)</string>
     <string name="parallax">Parallax-Effekt</string>
     <string name="pOn">Parallax-Effekt aktiviert</string>
     <string name="pOff">Parallax-Effekt deaktiviert</string>
@@ -23,6 +22,16 @@
         <item>HERBST</item>
         <item>WINTER WUNDERLAND</item>
     </string-array>
+    <string-array name="colors_intern">
+        <item>RED</item>
+        <item>BLUE</item>
+        <item>GREEN</item>
+        <item>COLORFUL</item>
+        <item>PINK</item>
+        <item>AUTUMN</item>
+        <item>WINTER WONDERLAND</item>
+    </string-array>
+    <string name="notification">Lust auf eine Veränderung? :)</string>
     <string name="menuImp">Impressum</string>
     <string name="menuRate">App bewerten</string>
     <string name="impr">Impressum</string>
@@ -30,6 +39,6 @@
     <string name="mail">paulhihihi@gmail.com</string>
     <string name="rateText">Ich freue mich über eine App Bewertung oder auch über Feedback im Google Play Store :)</string>
     <string name="rateButton">App bewerten</string>
-    <string name="license">Lizenziert unter der BSD-3-License</string>
+    <string name="license">Lizenziert unter der BSD-3-Lizenz</string>
     <string name="copyright">_ @Copyright 2017 Paul Himmler _</string>
 </resources>

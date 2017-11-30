@@ -2,7 +2,9 @@ package pit.opengles;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -33,6 +36,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+
+import java.util.Calendar;
+import java.util.Date;
 
 import pit.livewallpaper.ColloredWallpaperService;
 
@@ -99,6 +105,18 @@ public class WallpaperMainActivity extends Activity {
             throw new RuntimeException("Error OpenGL ES 2.0 not found");
         }
 
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent1 = new Intent(WallpaperMainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(WallpaperMainActivity.this, 0,intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) getSystemService(WallpaperMainActivity.this.ALARM_SERVICE);
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        //SAVED STATE
         editor.putString("color", prefs.getString("color", "COLORFUL"));
         _mRenderer.switchColors(prefs.getString("color", "COLORFUL"));
         color =  prefs.getString("color", "");
