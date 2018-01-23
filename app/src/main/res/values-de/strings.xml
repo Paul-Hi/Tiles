@@ -7,7 +7,19 @@
     <string name="eight">8</string>
     <string name="rand">zufällig</string>
     <string name="animSpeed">Animationsgeschwindigkeit</string>
-    <string name="parallax">Parallax-Effekt</string>
+    <string name="parallax">Parallax-Effekt    </string>
+    <string name="update">
+    <![CDATA[
+        <b>Version 1.54:</b>
+        <p>
+        Parallax-Effekt verbessert - reagiert jetzt auf Homescreen Gesten!
+        </p>
+        <p>
+        Überarbeitung der Oberfläche der Einstellungen - jetzt weißer ;)
+        </p>
+     ]]>
+    </string>
+    <string name="ok">Danke!</string>
     <string name="pOn">Parallax-Effekt aktiviert</string>
     <string name="pOff">Parallax-Effekt deaktiviert</string>
     <string name="colordropdown">Hintergrundfarbe</string>
@@ -36,7 +48,7 @@
     <string name="menuRate">App bewerten</string>
     <string name="impr">Impressum</string>
     <string name="feedback">Feedback An:</string>
-    <string name="mail">paulhihihi@gmail.com</string>
+    <string name="mail">sup.paul.h@gmail.com</string>
     <string name="rateText">Ich freue mich über eine App Bewertung oder auch über Feedback im Google Play Store :)</string>
     <string name="rateButton">App bewerten</string>
     <string name="license">Lizenziert unter der BSD-3-Lizenz</string>

@@ -132,7 +132,7 @@ public class GLESPlaneAnimatedSurfaceView extends GLSurfaceView implements Senso
 
         if ((deltaX != 0) || (deltaY != 0))
         {
-            if(rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed);
+            if(rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed, false);
         }
 
     }

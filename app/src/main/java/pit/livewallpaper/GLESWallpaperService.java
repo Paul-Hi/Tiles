@@ -1,12 +1,16 @@
 package pit.livewallpaper;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.service.wallpaper.WallpaperService;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
@@ -109,7 +113,7 @@ public abstract class GLESWallpaperService extends WallpaperService
 
                 if ((Math.abs(deltaX) > 0.001f) || (Math.abs(deltaY) > 0.001f))
                 {
-                    if(_rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed);
+                    if(_rendererHasBeenSet) _mRenderer.parallaxMove(deltaX, deltaY, reversed, false);
                 }
             }
 
@@ -156,6 +160,28 @@ public abstract class GLESWallpaperService extends WallpaperService
             }
         }
 
+
+        int previousOffset = 0;
+        @Override
+        public void onOffsetsChanged (float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset)
+        {
+            int mult = 2;
+            if(previousOffset < xPixelOffset) mult *= -1;
+            int x = 0, y = 0;
+            if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_PORTRAIT)
+            {
+                x = 0;
+                y = mult;
+            }
+            else
+            {
+                y = 0;
+                x = mult;
+            }
+
+            if(_rendererHasBeenSet) _mSurfaceView._mRenderer.parallaxMove(x, y, _mSurfaceView.reversed, true);
+            previousOffset = xPixelOffset;
+        }
 
         public void activateSensors(boolean on)
         {

@@ -2,9 +2,7 @@ package pit.opengles;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,9 +10,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,18 +30,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-
-import java.util.Calendar;
-import java.util.Date;
-
 import pit.livewallpaper.ColloredWallpaperService;
 
 
@@ -49,9 +44,9 @@ import pit.livewallpaper.ColloredWallpaperService;
 
 public class WallpaperMainActivity extends Activity {
 
+    private int version;
     private GLESPlaneAnimatedSurfaceView _mGLSurfaceView;
     private GLESPlaneAnimatedRenderer _mRenderer;
-    private AdView _mAdView;
     public SharedPreferences prefs;
     public SharedPreferences.Editor editor;
     private boolean changedColor;
@@ -61,14 +56,13 @@ public class WallpaperMainActivity extends Activity {
     private boolean wasParallax;
     private String movement;
     private String color;
-    private String[] colors;
     private String[] colors_intern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        colors = getResources().getStringArray(R.array.colors);
+        String[] colors = getResources().getStringArray(R.array.colors);
         colors_intern = getResources().getStringArray(R.array.colors_intern);
         setContentView(R.layout.wallpaper_activity_main);
         changedColor = false;
@@ -79,18 +73,66 @@ public class WallpaperMainActivity extends Activity {
         movement = "";
         color = "";
 
-        MobileAds.initialize(this, getString(R.string.ad_mob_id));
-
-        _mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("F8757B0F4DDA3CEB3AFA68C63062296A") /* Pits Handy OnePlus3 - CHECK */
-                .addTestDevice("397A8E3873AFA1DDC3F3897C51B44C8B") /* Pits Tablet Huawei* - CHECK */
-                .build();
-        _mAdView.loadAd(adRequest);
 
         prefs = getSharedPreferences("Info", Context.MODE_PRIVATE);
         editor = prefs.edit();
+
+        MobileAds.initialize(this, getString(R.string.ad_mob_id));
+
+        AdView _mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("00718D2A5312B00A9EF221D92DD35747") /* Pits Handy OnePlus3 - CHECK */
+                .addTestDevice("397A8E3873AFA1DDC3F3897C51B44C8B") /* Pits Tablet Huawei - CHECK */
+                .build();
+        _mAdView.loadAd(adRequest);
+
+        try {
+            version = prefs.getInt("update", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
+            editor.putInt("update", version);
+            editor.apply();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            if(version < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode)
+            {
+                editor.putInt("update", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
+                editor.apply();
+                AlertDialog.Builder builder;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                }
+                else
+                {
+                    builder = new AlertDialog.Builder(this);
+                }
+                builder.setMessage(Html.fromHtml(getResources().getString(R.string.update)))
+                        .setIcon(R.mipmap.tlw_icon)
+                        .setNegativeButton(R.string.menuRate, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try
+                                {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market:://details?id=pit.opengles")));
+                                }
+                                catch(Exception e)
+                                {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pit.opengles")));
+                                }
+                            }
+                        })
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         _mGLSurfaceView = (GLESPlaneAnimatedSurfaceView) findViewById(R.id.surfaceView);
         _mRenderer = new GLESPlaneAnimatedRenderer(this);
@@ -104,17 +146,6 @@ public class WallpaperMainActivity extends Activity {
         {
             throw new RuntimeException("Error OpenGL ES 2.0 not found");
         }
-
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Intent intent1 = new Intent(WallpaperMainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(WallpaperMainActivity.this, 0,intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager am = (AlarmManager) getSystemService(WallpaperMainActivity.this.ALARM_SERVICE);
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
         //SAVED STATE
         editor.putString("color", prefs.getString("color", "COLORFUL"));
@@ -152,7 +183,7 @@ public class WallpaperMainActivity extends Activity {
                 break;
             case "COLORFUL":
                 colorDropDown.setSelection(3);
-                dropDownImage.setBackgroundColor(Color.rgb(100, 100, 100));
+                dropDownImage.setBackgroundColor(Color.rgb(255, 150, 0));
                 break;
             case "PINK":
                 colorDropDown.setSelection(4);
@@ -192,7 +223,7 @@ public class WallpaperMainActivity extends Activity {
                     case 3:
                         _mRenderer.switchColors("COLORFUL");
                         editor.putString("color", "COLORFUL");
-                        dropDownImage.setBackgroundColor(Color.rgb(100, 100, 100));
+                        dropDownImage.setBackgroundColor(Color.rgb(255, 150, 0));
                         break;
                     case 4:
                         _mRenderer.switchColors("PINK");
@@ -241,8 +272,8 @@ public class WallpaperMainActivity extends Activity {
             }
         });
 
-        //PARALLAX BUTTON
-        ToggleButton parallaxToggle = (ToggleButton) findViewById(R.id.parallaxToggle) ;
+        //PARALLAX TOGGLE
+        SwitchCompat parallaxToggle = (SwitchCompat) findViewById(R.id.parallaxToggle) ;
         boolean pT = prefs.getBoolean("sensors", false);
         if(pT)
             parallaxToggle.toggle();
@@ -256,8 +287,6 @@ public class WallpaperMainActivity extends Activity {
                     else changedParallax = false;
                     _mGLSurfaceView.activateSensors(true);
                     editor.putBoolean("sensors", true);
-                    Toast.makeText(getBaseContext(), R.string.pOn,
-                        Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -265,8 +294,6 @@ public class WallpaperMainActivity extends Activity {
                     else changedParallax = false;
                     _mGLSurfaceView.activateSensors(false);
                     editor.putBoolean("sensors", false);
-                    Toast.makeText(getBaseContext(), R.string.pOff,
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

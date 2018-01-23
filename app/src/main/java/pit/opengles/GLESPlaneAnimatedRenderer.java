@@ -193,22 +193,33 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }
 
-    public void parallaxMove(float x, float y, boolean reversed)
+    public void parallaxMove(float x, float y, boolean reversed, boolean touch)
     {
-        if (_mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            float temp;
-            if (reversed)
+        if (_mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (!touch)
             {
-                temp = y;
-                y = -x;
+                float temp;
+                if (reversed) {
+                    temp = y;
+                    y = -x;
+                } else {
+                    temp = -y;
+                    y = x;
+                }
+                x = temp;
             }
             else
             {
-                temp = -y;
-                y = x;
+                float temp;
+                if (reversed) {
+                    temp = y;
+                    y = -x;
+                } else {
+                    temp = y;
+                    y = x;
+                }
+                x = temp;
             }
-            x = temp;
         }
 
         _mOffset.x += (x * (0.001f));
