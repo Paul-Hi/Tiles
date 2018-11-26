@@ -30,9 +30,11 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 - [x] ui support of many different sized screens (Phone, Tablet)
 
 == Next Big Thing ;-)
+* [ ] light specific effects (flicker, glow)
 * [ ] more backgrounds in general
 
 == Roadmap (unsorted)
 * [ ] pro version for fans
 * [ ] new real physical effect moves
+* [ ] even better support for different aspect ratios (because 16:9 is too boring for all the smartphone manifacturers^^)
 * [ ] ....
