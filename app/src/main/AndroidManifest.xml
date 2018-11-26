@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="pit.opengles">
-    <uses-sdk       android:minSdkVersion="21"
-        android:targetSdkVersion="25" />
     <uses-feature   android:glEsVersion="0x20000"
         android:required="true" />
     <uses-feature android:name="android.software.live_wallpaper" />
@@ -15,6 +13,8 @@
         android:roundIcon="@mipmap/tlw_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6496680407589387~2702520004"/>
 
         <activity android:name=".WallpaperMainActivity"
             android:exported="true">

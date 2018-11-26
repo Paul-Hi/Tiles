@@ -18,7 +18,7 @@ public class ImpressumActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.impressum_activity);
 
-        Button rate = (Button) findViewById(R.id.rate);
+        Button rate = findViewById(R.id.rate);
         rate.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {

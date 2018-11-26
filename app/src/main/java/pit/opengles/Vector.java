@@ -13,9 +13,7 @@ public abstract class Vector {
     {
         float[] a = get();
         float result = 0;
-        for(int i = 0; i < a.length; i++)
-        {
-            float f = a[i];
+        for (float f : a) {
             result += (f * f);
         }
         return result;

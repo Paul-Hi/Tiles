@@ -25,7 +25,7 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
     private FloatBuffer _mTexCoordBuffer;
     private float _mAnimationSpeed = 0.5f;
     private Camera _mCamera;
-    private Vector3f _mLightPosition = new Vector3f(0, 0, -1);;
+    private Vector3f _mLightPosition = new Vector3f(0, 0, -0.9f);
     private Vector3f _mPlanePosition = new Vector3f(0, 0, 0);
     private Transform _mLightTransform = new Transform(_mLightPosition.x, _mLightPosition.y, _mLightPosition.z, 1, 1, 1, 0.1f,0.1f ,0.1f ,0);
     private Transform _mPlaneTransform = new Transform(_mPlanePosition.x, _mPlanePosition.y, _mPlanePosition.z, 1, 1, 1,1.25f, 1.25f,1 ,0);
@@ -193,6 +193,8 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
     }
 
+    private static float MAX_OFFSET = .1f;
+
     public void parallaxMove(float x, float y, boolean reversed, boolean touch)
     {
         if (_mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -224,6 +226,13 @@ public class GLESPlaneAnimatedRenderer implements GLSurfaceView.Renderer {
 
         _mOffset.x += (x * (0.001f));
         _mOffset.y -= (y * (0.001f));
+        _mOffset.x = clampf(_mOffset.x, -MAX_OFFSET, MAX_OFFSET);
+        _mOffset.y = clampf(_mOffset.y, -MAX_OFFSET, MAX_OFFSET);
+    }
+
+    private float clampf(float value, float min, float max)
+    {
+        return Math.min(Math.max(value, min), max);
     }
 
     private FloatBuffer floatToBuffer(float[] array)

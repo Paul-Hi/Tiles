@@ -12,10 +12,16 @@
     <![CDATA[
         <b>Version 1.54:</b>
         <p>
-        Improved Parallax Effect - now reacting to homescreen swipes!
+            Parallax Effect limited and visually optimized.
         </p>
         <p>
-        Redesign for the settings - now cleaner ;)
+            Bump Mapping smoothed out.
+        </p>
+        <p>
+            Homescreen swipes improved.
+        </p>
+        <p>
+            UI rounded for better fitting "modern" displays and because it is fancy.
         </p>
      ]]>
     </string>

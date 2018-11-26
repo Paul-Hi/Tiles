@@ -14,9 +14,10 @@ void main()
 {
 	mat3 tbn = (mat3(vec3(1,0,0), vec3(0,1,0), vec3(0,0,-1)));
 	vec3 norm = tbn * normalize(texture2D(bumptexture, TexCoords + offset ).rgb * 2.0 - 1.0);
-	float dist = length(FragPos - lightPosition);
-    vec3 lightDir = normalize(lightPosition - vec3(FragPos.x, FragPos.y, 0));
+	vec3 lightPar = vec3(lightPosition.xy + (offset * 0.8f), lightPosition.z);
+	float dist = length(FragPos - lightPar);
+    vec3 lightDir = normalize(lightPar - vec3(FragPos.x, FragPos.y, 0));
     float diff = max(dot(norm, lightDir), 0.0);
-	float light = (diff * 0.02)/ ((dist * (dist)));
+	float light = (diff * 0.02) / ((dist * (dist)));
 	gl_FragColor = mix((texture2D(texture, TexCoords + offset))* light, texture2D(mask, TexCoords + offset), (texture2D(mask, TexCoords + offset)).a);
 }

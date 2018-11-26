@@ -33,14 +33,14 @@
                 android:id="@+id/motionGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:checkedButton="@+id/straight"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/surfaceView"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/surfaceHolder">
 
                 <RadioButton
                     android:id="@+id/straight"
@@ -86,32 +86,46 @@
                     android:textSize="18sp"
                     tools:layout_editor_absoluteX="16dp"
                     tools:layout_editor_absoluteY="232dp" />
+
             </RadioGroup>
 
-            <pit.opengles.GLESPlaneAnimatedSurfaceView
-                android:id="@+id/surfaceView"
-                android:layout_width="188dp"
-                android:layout_height="311dp"
+            <android.support.v7.widget.CardView
+                android:id="@+id/surfaceHolder"
+                android:layout_width="216dp"
+                android:layout_height="384dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <pit.opengles.GLESPlaneAnimatedSurfaceView
+                    android:id="@+id/surfaceView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp" />
+            </android.support.v7.widget.CardView>
 
             <Button
                 android:id="@+id/buttonSetWallpaper"
-                style="@android:style/Widget.Material.Button.Colored"
+                style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/bitTransparent"
-                android:elevation="10dp"
-                android:shadowDy="100"
-                android:shadowRadius="10"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/my_button"
                 android:text="@string/set"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/parallaxToggle" />
@@ -140,50 +154,62 @@
                 android:textColor="@color/textDark"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/colorDropdown" />
+                app:layout_constraintTop_toBottomOf="@+id/cd_box" />
 
-            <ImageView
-                android:id="@+id/dropdownimage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:alpha="80"
-                android:background="@color/colorPrimaryDark"
-                android:contentDescription="@string/colordropdown"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/colorDropdown"
-                app:layout_constraintEnd_toEndOf="@+id/colorDropdown"
-                app:layout_constraintStart_toStartOf="@+id/colorDropdown"
-                app:layout_constraintTop_toTopOf="@+id/colorDropdown" />
-
-            <ImageView
-                android:id="@+id/dropdownimage2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="128dp"
-                android:alpha="80"
-                android:background="@color/lightTransparent"
-                android:contentDescription="@string/readdropdown"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/colorDropdown"
-                app:layout_constraintEnd_toEndOf="@+id/colorDropdown"
-                app:layout_constraintStart_toStartOf="@+id/colorDropdown"
-                app:layout_constraintTop_toTopOf="@+id/colorDropdown" />
-
-            <Spinner
-                android:id="@+id/colorDropdown"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cd_box"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:alpha="20"
-                android:backgroundTint="@android:color/background_light"
-                android:popupBackground="@android:color/background_light"
-                android:spinnerMode="dialog"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/surfaceView" />
+                app:layout_constraintTop_toBottomOf="@+id/motionGroup">
+
+                <ImageView
+                    android:id="@+id/dropdownimage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:alpha="80"
+                    android:background="@color/colorPrimaryDark"
+                    android:contentDescription="@string/colordropdown"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/dropdownimage2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="128dp"
+                    android:layout_marginBottom="0dp"
+                    android:alpha="80"
+                    android:background="@color/lightTransparent"
+                    android:contentDescription="@string/readdropdown"
+                    android:scaleType="centerCrop" />
+
+                <Spinner
+                    android:id="@+id/colorDropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:alpha="20"
+                    android:backgroundTint="@android:color/background_light"
+                    android:popupBackground="@android:color/background_light"
+                    android:spinnerMode="dialog" />
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/parallaxToggle"

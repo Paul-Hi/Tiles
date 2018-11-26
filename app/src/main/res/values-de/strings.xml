@@ -8,12 +8,12 @@
     <string name="rand">zufällig</string>
     <string name="animSpeed">Animationsgeschwindigkeit</string>
     <string name="parallax">Parallax-Effekt    </string>
-    <string name="update">
+    <string name="update">F
     <![CDATA[
         <b>Version 1.54:</b>
         <p>
         Parallax-Effekt verbessert - reagiert jetzt auf Homescreen Gesten!
-        </p>
+        </p>f
         <p>
         Überarbeitung der Oberfläche der Einstellungen - jetzt weißer ;)
         </p>

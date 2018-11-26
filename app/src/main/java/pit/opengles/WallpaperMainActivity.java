@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.view.Menu;
@@ -30,7 +31,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdRequest;
@@ -73,68 +73,60 @@ public class WallpaperMainActivity extends Activity {
         movement = "";
         color = "";
 
-
         prefs = getSharedPreferences("Info", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
         MobileAds.initialize(this, getString(R.string.ad_mob_id));
 
-        AdView _mAdView = (AdView) findViewById(R.id.adView);
+        AdView _mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("3351525A4738563F229119F6CA6CF6E5") /* Pits Handy OnePlus6 - CHECK */
                 .addTestDevice("00718D2A5312B00A9EF221D92DD35747") /* Pits Handy OnePlus3 - CHECK */
                 .addTestDevice("397A8E3873AFA1DDC3F3897C51B44C8B") /* Pits Tablet Huawei - CHECK */
                 .build();
         _mAdView.loadAd(adRequest);
 
-        try {
-            version = prefs.getInt("update", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
-            editor.putInt("update", version);
+        version = prefs.getInt("update", BuildConfig.VERSION_CODE);
+        editor.putInt("update", version);
+        editor.apply();
+        if(version < BuildConfig.VERSION_CODE)
+        {
+            editor.putInt("update", BuildConfig.VERSION_CODE);
             editor.apply();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            if(version < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode)
+            AlertDialog.Builder builder;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             {
-                editor.putInt("update", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
-                editor.apply();
-                AlertDialog.Builder builder;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-                }
-                else
-                {
-                    builder = new AlertDialog.Builder(this);
-                }
-                builder.setMessage(Html.fromHtml(getResources().getString(R.string.update)))
-                        .setIcon(R.mipmap.tlw_icon)
-                        .setNegativeButton(R.string.menuRate, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try
-                                {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market:://details?id=pit.opengles")));
-                                }
-                                catch(Exception e)
-                                {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pit.opengles")));
-                                }
-                            }
-                        })
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .show();
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            else
+            {
+                builder = new AlertDialog.Builder(this);
+            }
+            builder.setMessage(Html.fromHtml(getResources().getString(R.string.update)))
+                    .setIcon(R.mipmap.tlw_icon)
+                    .setNegativeButton(R.string.menuRate, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try
+                            {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market:://details?id=pit.opengles")));
+                            }
+                            catch(Exception e)
+                            {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pit.opengles")));
+                            }
+                        }
+                    })
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
         }
 
-        _mGLSurfaceView = (GLESPlaneAnimatedSurfaceView) findViewById(R.id.surfaceView);
+        _mGLSurfaceView = findViewById(R.id.surfaceView);
         _mRenderer = new GLESPlaneAnimatedRenderer(this);
 
         if(isValidGLES())
@@ -162,40 +154,48 @@ public class WallpaperMainActivity extends Activity {
 
 
         //COLOR DROPDOWN
-        Spinner colorDropDown = (Spinner) findViewById(R.id.colorDropdown);
+        Spinner colorDropDown = findViewById(R.id.colorDropdown);
         ArrayAdapter adapter= new ArrayAdapter<>(this, R.layout.spinner_item, colors);
-        final ImageView dropDownImage = (ImageView) findViewById(R.id.dropdownimage);
+        final CardView cd_box = findViewById(R.id.cd_box);
+        final ImageView dropDownImage =  findViewById(R.id.dropdownimage);
 
         colorDropDown.setAdapter(adapter);
         String currentColor = prefs.getString("color", "COLORFUL");
         switch (currentColor) {
             case "RED":
                 colorDropDown.setSelection(0);
+                cd_box.setCardBackgroundColor(Color.rgb(255, 0, 0));
                 dropDownImage.setBackgroundColor(Color.rgb(255, 0, 0));
                 break;
             case "BLUE":
                 colorDropDown.setSelection(1);
                 dropDownImage.setBackgroundColor(Color.rgb(0, 0, 255));
+                cd_box.setCardBackgroundColor(Color.rgb(0, 0, 255));
                 break;
             case "GREEN":
                 colorDropDown.setSelection(2);
                 dropDownImage.setBackgroundColor(Color.rgb(0, 255, 0));
+                cd_box.setCardBackgroundColor(Color.rgb(0, 255, 0));
                 break;
             case "COLORFUL":
                 colorDropDown.setSelection(3);
                 dropDownImage.setBackgroundColor(Color.rgb(255, 150, 0));
+                cd_box.setCardBackgroundColor(Color.rgb(255, 150, 0));
                 break;
             case "PINK":
                 colorDropDown.setSelection(4);
                 dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
+                cd_box.setCardBackgroundColor(Color.rgb(225, 0, 135));
                 break;
             case "AUTUMN":
                 colorDropDown.setSelection(5);
                 dropDownImage.setBackgroundColor(Color.rgb(175, 125, 0));
+                cd_box.setCardBackgroundColor(Color.rgb(175, 125, 0));
                 break;
             case "WINTER WONDERLAND":
                 colorDropDown.setSelection(6);
                 dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
+                cd_box.setCardBackgroundColor(Color.rgb(200, 200, 255));
                 break;
         }
 
@@ -209,36 +209,43 @@ public class WallpaperMainActivity extends Activity {
                         _mRenderer.switchColors("RED");
                         editor.putString("color", "RED");
                         dropDownImage.setBackgroundColor(Color.rgb(255, 0, 0));
+                        cd_box.setCardBackgroundColor(Color.rgb(255, 0, 0));
                         break;
                     case 1:
                         _mRenderer.switchColors("BLUE");
                         editor.putString("color", "BLUE");
                         dropDownImage.setBackgroundColor(Color.rgb(0, 0, 255));
+                        cd_box.setCardBackgroundColor(Color.rgb(0, 0, 255));
                         break;
                     case 2:
                         _mRenderer.switchColors("GREEN");
                         editor.putString("color", "GREEN");
                         dropDownImage.setBackgroundColor(Color.rgb(0, 255, 0));
+                        cd_box.setCardBackgroundColor(Color.rgb(0, 255, 0));
                         break;
                     case 3:
                         _mRenderer.switchColors("COLORFUL");
                         editor.putString("color", "COLORFUL");
                         dropDownImage.setBackgroundColor(Color.rgb(255, 150, 0));
+                        cd_box.setCardBackgroundColor(Color.rgb(255, 150, 0));
                         break;
                     case 4:
                         _mRenderer.switchColors("PINK");
                         editor.putString("color", "PINK");
                         dropDownImage.setBackgroundColor(Color.rgb(225, 0, 135));
+                        cd_box.setCardBackgroundColor(Color.rgb(225, 0, 135));
                         break;
                     case 5:
                         _mRenderer.switchColors("AUTUMN");
                         editor.putString("color", "AUTUMN");
                         dropDownImage.setBackgroundColor(Color.rgb(175, 125, 0));
+                        cd_box.setCardBackgroundColor(Color.rgb(175, 125, 0));
                         break;
                     case 6:
                         _mRenderer.switchColors("WINTER WONDERLAND");
                         editor.putString("color", "WINTER WONDERLAND");
                         dropDownImage.setBackgroundColor(Color.rgb(200, 200, 255));
+                        cd_box.setCardBackgroundColor(Color.rgb(200, 200, 255));
                         break;
                 }
             }
@@ -251,7 +258,7 @@ public class WallpaperMainActivity extends Activity {
 
 
         //SET WALLPAPER
-        Button setButton = (Button) findViewById(R.id.buttonSetWallpaper);
+        Button setButton = findViewById(R.id.buttonSetWallpaper);
         setButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,7 +280,7 @@ public class WallpaperMainActivity extends Activity {
         });
 
         //PARALLAX TOGGLE
-        SwitchCompat parallaxToggle = (SwitchCompat) findViewById(R.id.parallaxToggle) ;
+        SwitchCompat parallaxToggle = findViewById(R.id.parallaxToggle) ;
         boolean pT = prefs.getBoolean("sensors", false);
         if(pT)
             parallaxToggle.toggle();
@@ -303,19 +310,19 @@ public class WallpaperMainActivity extends Activity {
         RadioButton radioButton;
 
         // MOTION RADIO GROUP
-        final RadioGroup motion = (RadioGroup) findViewById(R.id.motionGroup);
+        final RadioGroup motion = findViewById(R.id.motionGroup);
         String currentMotion = prefs.getString("motion", "straight");
         switch (currentMotion) {
             case "straight":
-                radioButton = (RadioButton) findViewById(R.id.straight);
+                radioButton = findViewById(R.id.straight);
                 radioButton.toggle();
                 break;
             case "8":
-                radioButton = (RadioButton) findViewById(R.id.eight);
+                radioButton = findViewById(R.id.eight);
                 radioButton.toggle();
                 break;
             case "random":
-                radioButton = (RadioButton) findViewById(R.id.random);
+                radioButton =  findViewById(R.id.random);
                 radioButton.toggle();
                 break;
         }
@@ -348,7 +355,7 @@ public class WallpaperMainActivity extends Activity {
         });
 
         //ANIMATION SPEED SLIDER
-        SeekBar animSpeed = (SeekBar) findViewById(R.id.animationSpeedSlider);
+        SeekBar animSpeed = findViewById(R.id.animationSpeedSlider);
         Float currentSpeed = prefs.getFloat("animSpeed", 0.5f);
         animSpeed.setProgress((int)(currentSpeed * 100));
         animSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

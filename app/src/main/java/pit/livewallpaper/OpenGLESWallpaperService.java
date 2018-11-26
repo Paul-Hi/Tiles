@@ -45,8 +45,6 @@ public abstract class OpenGLESWallpaperService extends GLESWallpaperService
                 _mRenderer = getGLESRenderer();
                 setRenderer(_mRenderer);
             }
-            else
-                return;
         }
 
         private boolean isValidGLES()

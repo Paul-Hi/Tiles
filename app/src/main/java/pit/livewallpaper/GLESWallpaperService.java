@@ -2,15 +2,12 @@ package pit.livewallpaper;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.service.wallpaper.WallpaperService;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
@@ -165,18 +162,17 @@ public abstract class GLESWallpaperService extends WallpaperService
         @Override
         public void onOffsetsChanged (float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset)
         {
-            int mult = 2;
-            if(previousOffset < xPixelOffset) mult *= -1;
-            int x = 0, y = 0;
+            float dif = (xPixelOffset - previousOffset) * 0.1f;
+            float x, y;
             if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_PORTRAIT)
             {
                 x = 0;
-                y = mult;
+                y = dif;
             }
             else
             {
                 y = 0;
-                x = mult;
+                x = dif;
             }
 
             if(_rendererHasBeenSet) _mSurfaceView._mRenderer.parallaxMove(x, y, _mSurfaceView.reversed, true);
