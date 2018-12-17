@@ -8,14 +8,20 @@
     <string name="rand">zufällig</string>
     <string name="animSpeed">Animationsgeschwindigkeit</string>
     <string name="parallax">Parallax-Effekt    </string>
-    <string name="update">F
+    <string name="update">
     <![CDATA[
-        <b>Version 1.54:</b>
+         <b>Version 1.6:</b>
         <p>
-        Parallax-Effekt verbessert - reagiert jetzt auf Homescreen Gesten!
-        </p>f
+            Parallax Effekt begrenzt und visuell optimiert.
+        </p>
         <p>
-        Überarbeitung der Oberfläche der Einstellungen - jetzt weißer ;)
+            Bump Mapping verbessert.
+        </p>
+        <p>
+            Homescreen Gesten verbessert.
+        </p>
+        <p>
+            UI abgerundet, um besser zu den "modernen" Displays zu passen und, weil es gut aussieht.
         </p>
      ]]>
     </string>
