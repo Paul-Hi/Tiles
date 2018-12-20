@@ -11,6 +11,7 @@ If you want to build it for yourself, you can do so
 . File->New->Import Project
 . Build APK
 . Copy to your phone(Minimum API 21(Android 5.0)), enjoy :)
+(Console build with gradle should also be possible)
 
 
 Feature wishes are welcome (github ticket)
@@ -20,14 +21,14 @@ Big shoutout to the guys from http://www.learnopengles.com for the good explanat
 
 == Features
 - [x] colored dropdown menu for selection
-- [x] five different backgrounds (more to come)
+- [x] seven different backgrounds (more to come)
 - [x] imprint and copyright :-)
 - [x] different paths the light follows (straight, 8 and random movement)
 - [x] light speed configurable
 - [x] working optimized parallax effect
 - [x] settings stored when reconfiguring the live wallpaper
 - [x] admob support to help me get some support for my next test phone (Pixel X?) ;-)
-- [x] ui support of many different sized screens (Phone, Tablet)
+- [x] ui support of many different sized screens (Phone, Tablet) and differen aspect ratios
 
 == Next Big Thing ;-)
 * [ ] light specific effects (flicker, glow)
