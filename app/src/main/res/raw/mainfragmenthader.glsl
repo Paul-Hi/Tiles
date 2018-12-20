@@ -14,7 +14,7 @@ void main()
 {
 	mat3 tbn = (mat3(vec3(1,0,0), vec3(0,1,0), vec3(0,0,-1)));
 	vec3 norm = tbn * normalize(texture2D(bumptexture, TexCoords + offset ).rgb * 2.0 - 1.0);
-	vec3 lightPar = vec3(lightPosition.xy + (offset * 0.8f), lightPosition.z);
+	vec3 lightPar = vec3(lightPosition.xy + (offset * 0.8), lightPosition.z);
 	float dist = length(FragPos - lightPar);
     vec3 lightDir = normalize(lightPar - vec3(FragPos.x, FragPos.y, 0));
     float diff = max(dot(norm, lightDir), 0.0);

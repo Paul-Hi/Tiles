@@ -10,7 +10,7 @@
     <string name="parallax">Parallax-Effekt    </string>
     <string name="update">
     <![CDATA[
-         <b>Version 1.6:</b>
+         <b>Version 1.65:</b>
         <p>
             Parallax Effekt begrenzt und visuell optimiert.
         </p>
@@ -22,6 +22,9 @@
         </p>
         <p>
             UI abgerundet, um besser zu den "modernen" Displays zu passen und, weil es gut aussieht.
+        </p>
+        <p>
+            Abstürze auf Mali GPU Geräten behoben.
         </p>
      ]]>
     </string>
